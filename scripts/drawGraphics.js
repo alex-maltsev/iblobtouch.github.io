@@ -71,47 +71,50 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
         ctx.fill();
         ctx.stroke();
     } else {
-        if (type === 0) {
-            ctx.fillRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
-            ctx.strokeRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
-        } else if (type === 1) {
-            ctx.beginPath();
-            ctx.moveTo(xoffset + length, -(width / 2) - yoffset);
-            ctx.lineTo(xoffset + length + (length / 2), 0 - ((width * 1.5) + yoffset));
-            ctx.lineTo(xoffset + length + (length / 2), ((width * 1.5) - yoffset));
-            ctx.lineTo(xoffset + length, (width / 2) - yoffset);
-            ctx.lineTo(xoffset + length, -(width / 2) - yoffset);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
-            ctx.strokeRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
-        } else if ((type === 2) || (type === 3)) {
-            ctx.beginPath();
-            ctx.moveTo(xoffset + 20, -(width / 4) - yoffset);
-            ctx.lineTo(xoffset + 20 + (length / 2), 0 - ((width / 2) + yoffset) - (width / 4));
-            ctx.lineTo(xoffset + 20 + (length / 2), ((width / 2) - yoffset) + (width / 4));
-            ctx.lineTo(xoffset + 20, (width / 4) - yoffset);
-            ctx.lineTo(xoffset + 20, -(width / 4) - yoffset);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-        } else if (type === 4) {
-            ctx.translate(xoffset + parseInt(validateField(document.getElementById("body").value, 32)), -((width / 2) + yoffset));
-            if ((editmode === false) && (shapes.length > 0)) {
-                ctx.rotate(((angle(tankpointx, tankpointy, mouse.x, mouse.y) + a) * -1) * (Math.PI / 180));
-                ctx.rotate(angle(tankpointx + xoffset + parseFloat(validateField(document.getElementById("body").value, 32)), tankpointy - ((width / 2) + yoffset), shapes[nShape].x, shapes[nShape].y) * (Math.PI / 180));
-            }
-            ctx.fillRect(0, 0, length, width);
-            ctx.strokeRect(0, 0, length, width);
-            ctx.beginPath();
-            ctx.arc(0, width / 2, width, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+        switch (type) {
+            case BARREL_GUN:
+                ctx.fillRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
+                ctx.strokeRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
+                break;
+            case BARREL_TRAP_LAYER:
+                ctx.beginPath();
+                ctx.moveTo(xoffset + length, -(width / 2) - yoffset);
+                ctx.lineTo(xoffset + length + (length / 2), 0 - ((width * 1.5) + yoffset));
+                ctx.lineTo(xoffset + length + (length / 2), ((width * 1.5) - yoffset));
+                ctx.lineTo(xoffset + length, (width / 2) - yoffset);
+                ctx.lineTo(xoffset + length, -(width / 2) - yoffset);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
+                ctx.strokeRect(xoffset, 0 - ((width / 2) + yoffset), length, width);
+                break;
+            case BARREL_DRONE_MAKER:
+            case BARREL_NECRO_DRONE_MAKER:
+                ctx.beginPath();
+                ctx.moveTo(xoffset + 20, -(width / 4) - yoffset);
+                ctx.lineTo(xoffset + 20 + (length / 2), 0 - ((width / 2) + yoffset) - (width / 4));
+                ctx.lineTo(xoffset + 20 + (length / 2), ((width / 2) - yoffset) + (width / 4));
+                ctx.lineTo(xoffset + 20, (width / 4) - yoffset);
+                ctx.lineTo(xoffset + 20, -(width / 4) - yoffset);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                break;
+            case BARREL_AUTO_TURRET:
+                ctx.translate(xoffset + parseInt(validateField(document.getElementById("body").value, 32)), -((width / 2) + yoffset));
+                if ((editmode === false) && (shapes.length > 0)) {
+                    ctx.rotate(((angle(tankpointx, tankpointy, mouse.x, mouse.y) + a) * -1) * (Math.PI / 180));
+                    ctx.rotate(angle(tankpointx + xoffset + parseFloat(validateField(document.getElementById("body").value, 32)), tankpointy - ((width / 2) + yoffset), shapes[nShape].x, shapes[nShape].y) * (Math.PI / 180));
+                }
+                ctx.fillRect(0, 0, length, width);
+                ctx.strokeRect(0, 0, length, width);
+                ctx.beginPath();
+                ctx.arc(0, width / 2, width, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
         }
-
     }
     ctx.restore();
 }

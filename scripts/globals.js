@@ -2,6 +2,13 @@ var c = document.getElementById('game'),
     ctx = c.getContext('2d');
 // resize the canvas to fill browser window dynamically
 
+// Barrel types
+const BARREL_GUN = 0;
+const BARREL_TRAP_LAYER = 1;
+const BARREL_DRONE_MAKER = 2;
+const BARREL_NECRO_DRONE_MAKER = 3;
+const BARREL_AUTO_TURRET = 4;
+
 var autofire = false;
 var autospin = false;
 var editmode = false;
