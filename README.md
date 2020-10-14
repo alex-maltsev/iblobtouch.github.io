@@ -1,3 +1,5 @@
+In this fork I want to try and improve the code of the original repo with some refactoring and maybe even object-oriented programming. I don't know very much about JavaScript, so let's see what I can do :)
+
 # Custom tank builder for the game diep.io!
 
 Remember when you said you wanted a cool flamethrower in game? Or that time when you wanted laser tanks, or a big sword? Well, welcome to Diep.io's Fantasy Tank Builder(FTB) where you can do all of that and more. Build the tank of your dreams, then test it out in a simulated envirement mimicing the main game. When you're done, you can share it with your friends and fellow community members over on https://www.reddit.com/r/diepioftb. Or, if you have a penchant for explaining ideas and theories, present it as a suggestion for the developer of http://diep.io/ by posting your creation to https://www.reddit.com/r/diepiosuggestions.
