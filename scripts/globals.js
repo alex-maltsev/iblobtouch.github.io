@@ -361,18 +361,16 @@ function validateField(value, returnval, ignoreneg) {
 function printObject() {
     var barreltext = "";
     var outtext = parseFloat(validateField(document.getElementById("body").value, 0, true)) + "*" + document.getElementById("shape").value + "*" + document.getElementById("color").value + "*" + document.getElementById("scolo").value + "*" + parseFloat(validateField(document.getElementById("customsides").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customssides").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customdistance").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customsdist").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customangle").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customsangle").value, 0, true)) + "/" + parseFloat(validateField(document.getElementById("customssize").value, 0, true)) + "[";
-    if (barrels.length > 0) {
-        for (var i = 0; i < barrels.length; i += 1) {
+    for (var i = 0; i < barrels.length; i += 1) {
+        let barrel = barrels[i];
+        //Prevents timers from outputting current times to code.
+        barrel.reload = 0;
+        barrel.delay = 0;
+        barrel.delayed = true;
 
-            //Prevents timers from outputting current times to code.
-            barrels[i].reload = 0;
-            barrels[i].delay = 0;
-            barrels[i].delayed = true;
-
-            outtext += JSON.stringify(barrels[i]);
-            if (i < barrels.length - 1) {
-                outtext += ", ";
-            }
+        outtext += JSON.stringify(barrel);
+        if (i < barrels.length - 1) {
+            outtext += ", ";
         }
     }
     outtext += "]";
@@ -526,14 +524,13 @@ function importObject() {
         document.getElementById("body").value = inputtext
     }
 
-    for (var n = 0; n < barrels.length; n += 1) {
-        //Loop through each barrel.
-        if (barrels[n].image === undefined) {
-            barrels[n].image = "rectangle";
-            barrels[n].color = "#888888";
+    for (let barrel in barrels) {
+        if (barrel.image === undefined) {
+            barrel.image = "rectangle";
+            barrel.color = "#888888";
         }
-        if (barrels[n].bulletColor === undefined) {
-            barrels[n].bulletColor = "#ffffff";
+        if (barrel.bulletColor === undefined) {
+            barrel.bulletColor = "#ffffff";
         }
     }
     undos = [];

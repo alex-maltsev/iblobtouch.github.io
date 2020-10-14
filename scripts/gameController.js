@@ -245,88 +245,88 @@ function drawTank() {
     }
 
     for (var n = 0; n < barrels.length; n += 1) {
-        if (((mouse.held === true) || (autofire === true) || ((barrels[n].type === 4) && (shapes.length > 0))) && (editmode === false)) {
+        let barrel = barrels[n];
+        if (((mouse.held === true) || (autofire === true) || ((barrel.type === 4) && (shapes.length > 0))) && (editmode === false)) {
             var canfire = true;
-            if (barrels[n].hasOwnProperty("disabled") === true) {
-                if (barrels[n].disabled === false) {
-                    var canfire = false;
+            if (barrel.hasOwnProperty("disabled") === true) {
+                if (barrel.disabled === false) {
+                    canfire = false;
                 }
             }
 
             var damage = 10;
-            if (barrels[n].hasOwnProperty("damage") === true) {
-                damage = barrels[n].damage;
+            if (barrel.hasOwnProperty("damage") === true) {
+                damage = barrel.damage;
             }
 
             //Starts delay timer & disables it being run a second time
-            if ((barrels[n].delay <= 0) && (barrels[n].basedelay > 0) && (barrels[n].delayed === true)) {
-                barrels[n].delay = barrels[n].basedelay;
-                barrels[n].delayed = false;
+            if ((barrel.delay <= 0) && (barrel.basedelay > 0) && (barrel.delayed === true)) {
+                barrel.delay = barrel.basedelay;
+                barrel.delayed = false;
             }
 
-            if ((barrels[n].delay === 0) && (barrels[n].reload === 0) && (canfire === true) && (barrels[n].type < 2 || barrels[n].type === 4 || (((barrels[n].type === 2) && (dronelimit < parseFloat(validateField(document.getElementById("drones").value, 8, false)))) || ((barrels[n].type === 3) && (necrolimit < parseFloat(validateField(document.getElementById("necrodrones").value, 20, false))))))) {
-                if (barrels[n].hasOwnProperty("knockback") === false) {
-                    barrels[n].knockback = 0;
+            if ((barrel.delay === 0) && (barrel.reload === 0) && (canfire === true) && (barrel.type < 2 || barrel.type === 4 || (((barrel.type === 2) && (dronelimit < parseFloat(validateField(document.getElementById("drones").value, 8, false)))) || ((barrel.type === 3) && (necrolimit < parseFloat(validateField(document.getElementById("necrodrones").value, 20, false))))))) {
+                if (barrel.hasOwnProperty("knockback") === false) {
+                    barrel.knockback = 0;
                 }
 
-                var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrels[n].length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrels[n].length) - accel.y, barrels[n].yoffset, barrels[n].angle);
-                var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrels[n].length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrels[n].length) - accel.y, barrels[n].yoffset, barrels[n].angle);
+                var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
+                var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
                 var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
 
-                if (barrels[n].hasOwnProperty("b") === true) {
-                    if ((barrels[n].type < 4) || (shapes.length === 0)) {
-                        bullets[bullets.length] = new Bullet(n, barrels[n].b[0], barrels[n].b[1], barrels[n].b[2],
-                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrels[n].length + barrels[n].xoffset, barrels[n].angle) + tankpointx + xdif,
-                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrels[n].length + barrels[n].xoffset, barrels[n].angle) + tankpointy - ydif,
-                            mouse.x + ((mouse.x - tankpointx) * barrels[n].length + barrels[n].xoffset) - accel.x,
-                            mouse.y + ((mouse.y - tankpointy) * barrels[n].length + barrels[n].xoffset) - accel.y, barrels[n].spread, barrels[n].bulletColor);
+                if (barrel.hasOwnProperty("b") === true) {
+                    if ((barrel.type < 4) || (shapes.length === 0)) {
+                        bullets[bullets.length] = new Bullet(n, barrel.b[0], barrel.b[1], barrel.b[2],
+                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
+                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
+                            mouse.x + ((mouse.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
+                            mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                     } else {
-                        bullets[bullets.length] = new Bullet(n, barrels[n].b[0], barrels[n].b[1], barrels[n].b[2],
-                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrels[n].angle) + tankpointx + xdif,
-                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrels[n].angle) + tankpointy - ydif,
-                            shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrels[n].length + barrels[n].xoffset) - accel.x,
-                            shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrels[n].length + barrels[n].xoffset) - accel.y, barrels[n].spread, barrels[n].bulletColor);
+                        bullets[bullets.length] = new Bullet(n, barrel.b[0], barrel.b[1], barrel.b[2],
+                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrel.angle) + tankpointx + xdif,
+                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrel.angle) + tankpointy - ydif,
+                            shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
+                            shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                     }
                 } else {
-                    bullets[bullets.length] = new Bullet(n, barrels[n].width / 2, 5, 360,
-                        xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrels[n].length + barrels[n].xoffset, barrels[n].angle) + tankpointx + xdif,
-                        ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrels[n].length + barrels[n].xoffset, barrels[n].angle) + tankpointy - ydif,
-                        mouse.x + ((mouse.x - tankpointx) * barrels[n].length + barrels[n].xoffset) - accel.x,
-                        mouse.y + ((mouse.y - tankpointy) * barrels[n].length + barrels[n].xoffset) - accel.y, 0, barrels[n].bulletColor);
+                    bullets[bullets.length] = new Bullet(n, barrel.width / 2, 5, 360,
+                        xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
+                        ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
+                        mouse.x + ((mouse.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
+                        mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, 0, barrel.bulletColor);
                 }
-                barrels[n].reload = barrels[n].basereload;
+                barrel.reload = barrel.basereload;
 
                 tankalpha = 1.0;
 
-                if (barrels[n].hasKnockBack == true) {
-                    accel.x += Math.cos((angle(c.width / 2, c.height / 2, mouse.x, mouse.y) + barrels[n].angle) * (Math.PI / 180)) * (bullets[bullets.length - 1].knockback);
-                    accel.y += Math.sin((angle(c.width / 2, c.height / 2, mouse.x, mouse.y) + barrels[n].angle) * (Math.PI / 180)) * (bullets[bullets.length - 1].knockback);
+                if (barrel.hasKnockBack == true) {
+                    accel.x += Math.cos((angle(c.width / 2, c.height / 2, mouse.x, mouse.y) + barrel.angle) * (Math.PI / 180)) * (bullets[bullets.length - 1].knockback);
+                    accel.y += Math.sin((angle(c.width / 2, c.height / 2, mouse.x, mouse.y) + barrel.angle) * (Math.PI / 180)) * (bullets[bullets.length - 1].knockback);
                 }
-                if (barrels[n].type === 1) {
+                if (barrel.type === 1) {
                     bullets[bullets.length - 1].time *= 5;
                 }
-                if (barrels[n].type === 2) {
+                if (barrel.type === 2) {
                     dronelimit += 1;
                 } else {
                     necrolimit += 1;
                 }
             }
         } else {
-            if ((barrels[n].delay <= 0) && ((barrels[n].delay < barrels[n].basedelay) || (barrels[n].basedelay <= 0))) {
-                barrels[n].delayed = true;
+            if ((barrel.delay <= 0) && ((barrel.delay < barrel.basedelay) || (barrel.basedelay <= 0))) {
+                barrel.delayed = true;
             }
         }
 
         //Reenables delay timer
     }
 
-
     //Delay timer
-    for (var n = 0; n < barrels.length; n += 1) {
-        if (barrels[n].hasOwnProperty("delay") === false) {
-            barrels[n].delay = 0
-        } else if (barrels[n].delay > 0) {
-            barrels[n].delay -= 1;
+    for (let barrel in barrels) {
+        if (barrel.hasOwnProperty("delay") === false) {
+            barrel.delay = 0
+        } else if (barrel.delay > 0) {
+            barrel.delay -= 1;
         }
     }
 
@@ -437,33 +437,33 @@ function drawTank() {
         }
     }
 
+    //Loop through each barrel.
     for (var n = 0; n < barrels.length; n += 1) {
-        //Loop through each barrel.
-
-        if (barrels[n].reload > (barrels[n].basereload / 8) * 7) {
-            barrels[n].length -= (barrels[n].length / barrels[n].basereload);
+        let barrel = barrels[n];
+        if (barrel.reload > (barrel.basereload / 8) * 7) {
+            barrel.length -= (barrel.length / barrel.basereload);
             //If reload is > 3/4ths of its max value, reduce the length of the barrel.
-        } else if (barrels[n].reload > (barrels[n].basereload / 8) * 6) {
-            barrels[n].length += (barrels[n].length / barrels[n].basereload);
+        } else if (barrel.reload > (barrel.basereload / 8) * 6) {
+            barrel.length += (barrel.length / barrel.basereload);
             //otherwise if reload is > 2/4ths of its max value, increase the length of the barrel.
         } else {
-            barrels[n].length = barrels[n].baselength;
+            barrel.length = barrel.baselength;
             //For the rest of the reload cycle, set it back to its inital length.
         }
-        if (barrels[n].reload > 0) {
-            barrels[n].reload -= 1;
+        if (barrel.reload > 0) {
+            barrel.reload -= 1;
         }
         var anglePlace = angle(tankpointx, tankpointy, mouse.x, mouse.y);
         if (anglePlace < 0) {
             anglePlace = 360 + anglePlace;
         }
-        if ((anglePlace >= barrels[n].angle - 1) && (anglePlace <= barrels[n].angle + 1) && (editmode === true)) {
-            drawBarrel(barrels[n].angle, barrels[n].xoffset, barrels[n].yoffset, barrels[n].width, barrels[n].length, 0.5, false, barrels[n].type, barrels[n].image, barrels[n].color);
+        if ((anglePlace >= barrel.angle - 1) && (anglePlace <= barrel.angle + 1) && (editmode === true)) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
             if (input.f === true) {
                 barrels.splice(n, 1);
             }
-        } else if ((barrels[n].type < 4) || ((barrels[n].xoffset >= 0) || (barrels[n].xoffset < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
-            drawBarrel(barrels[n].angle, barrels[n].xoffset, barrels[n].yoffset, barrels[n].width, barrels[n].length, tankalpha, false, barrels[n].type, barrels[n].image, barrels[n].color);
+        } else if ((barrel.type < 4) || ((barrel.xoffset >= 0) || (barrel.xoffset < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
@@ -669,14 +669,14 @@ function drawTank() {
 
     for (var n = 0; n < barrels.length; n += 1) {
         //Loop through each barrel.
-
-        if ((angle(tankpointx, tankpointy, mouse.x, mouse.y) >= barrels[n].angle - 1) && (angle(tankpointx, tankpointy, mouse.x, mouse.y) <= barrels[n].angle + 1) && (editmode === true)) {
-            drawBarrel(barrels[n].angle, barrels[n].xoffset, barrels[n].yoffset, barrels[n].width, barrels[n].length, 0.5, false, barrels[n].type, barrels[n].image, barrels[n].color);
+        let barrel = barrels[n];
+        if ((angle(tankpointx, tankpointy, mouse.x, mouse.y) >= barrel.angle - 1) && (angle(tankpointx, tankpointy, mouse.x, mouse.y) <= barrel.angle + 1) && (editmode === true)) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
             if (input.f === true) {
                 barrels.splice(n, 1);
             }
-        } else if ((barrels[n].type === 4) && ((barrels[n].xoffset < 0) && (barrels[n].xoffset > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
-            drawBarrel(barrels[n].angle, barrels[n].xoffset, barrels[n].yoffset, barrels[n].width, barrels[n].length, tankalpha, false, barrels[n].type, barrels[n].image, barrels[n].color);
+        } else if ((barrel.type === 4) && ((barrel.xoffset < 0) && (barrel.xoffset > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
