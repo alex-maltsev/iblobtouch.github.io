@@ -14,9 +14,6 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
     if (editmode === false) {
         ctx.rotate((angle(tankpointx, tankpointy, mouse.x, mouse.y) + a) * (Math.PI / 180));
     } else if ((isghost === true) && (shiftheld === true)) {
-        //if ((a <= -172.5) || (a >= 172.5)) {
-        //a = 180;
-        //}
         a -= a % (document.getElementById("increment").value);
         ctx.rotate(a * (Math.PI / 180));
     } else {
@@ -255,35 +252,6 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, r)
     this.closePath();
     return this;
 };
-
-function drawPentagon(x, y, size, angle, color) {
-    ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(color, document.getElementById("luminance").value);
-    }
-    ctx.lineWidth = 5;
-    ctx.fillStyle = color;
-    ctx.translate(x, y);
-    ctx.rotate(angle * (Math.PI / 180));
-    ctx.beginPath();
-    ctx.moveTo(0, size);
-    ctx.rotate(360 / 5 * (Math.PI / 180));
-    ctx.lineTo(0, size);
-    ctx.rotate(360 / 5 * (Math.PI / 180));
-    ctx.lineTo(0, size);
-    ctx.rotate(360 / 5 * (Math.PI / 180));
-    ctx.lineTo(0, size);
-    ctx.rotate(360 / 5 * (Math.PI / 180));
-    ctx.lineTo(0, size);
-    ctx.rotate(360 / 5 * (Math.PI / 180));
-    ctx.lineTo(0, size);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-}
 
 function drawPoly(x, y, size, angle, color, sides) {
     ctx.save();
