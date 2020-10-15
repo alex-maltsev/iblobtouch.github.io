@@ -121,112 +121,116 @@ function drawTank() {
             }
         }
         for (var n = 0; n < shapes.length; n += 1) {
+            let shape = shapes[n];
 
-            if (Math.sqrt(Math.pow(shapes[n].x - tankpointx, 2) + Math.pow(shapes[n].y - tankpointy, 2)) < parseFloat(validateField(document.getElementById("body").value, 32)) + shapes[n].size / 2) {
-                if (shapes[n].health > parseFloat(validateField(document.getElementById("bodydamage").value, 50))) {
-                    shapes[n].health -= parseFloat(validateField(document.getElementById("bodydamage").value, 50));
-                    shapes[n].accelx += Math.cos(angle(tankpointx, tankpointy, shapes[n].x, shapes[n].y) * (Math.PI / 180));
-                    shapes[n].accely += Math.sin(angle(tankpointx, tankpointy, shapes[n].x, shapes[n].y) * (Math.PI / 180));
-                    accel.x += Math.cos(angle(tankpointx, tankpointy, shapes[n].x, shapes[n].y) * (Math.PI / 180)) / 5;
-                    accel.y += Math.sin(angle(tankpointx, tankpointy, shapes[n].x, shapes[n].y) * (Math.PI / 180)) / 5;
+            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < parseFloat(validateField(document.getElementById("body").value, 32)) + shape.size / 2) {
+                if (shape.health > parseFloat(validateField(document.getElementById("bodydamage").value, 50))) {
+                    shape.health -= parseFloat(validateField(document.getElementById("bodydamage").value, 50));
+                    shape.accelx += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
+                    shape.accely += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
+                    accel.x += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
+                    accel.y += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
                 } else {
                     shapes.splice(n, 1);
                     nShape = 0;
                 }
             }
 
-            if (Math.sqrt(Math.pow(shapes[n].x - tankpointx, 2) + Math.pow(shapes[n].y - tankpointy, 2)) < (Math.sqrt(Math.pow(shapes[nShape].x - tankpointx, 2) + Math.pow(shapes[nShape].y - tankpointy, 2)))) {
+            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < (Math.sqrt(Math.pow(shapes[nShape].x - tankpointx, 2) + Math.pow(shapes[nShape].y - tankpointy, 2)))) {
                 nShape = n;
             }
 
-            //Yellow Square
-            if (shapes[n].type === 0) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#FFE869", 4);
+            var color;
+            var numSides;
 
-                //Red Triangle
-            } else if (shapes[n].type === 1) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#FC7677", 3);
-
-                //Blue Pentagon
-            } else if (shapes[n].type === 2) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#768DFC", 5);
-
-                //Blue Alpha Pentagon
-            } else if (shapes[n].type === 3) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#768DFC", 5);
-
-                //Green Square
-            } else if (shapes[n].type === 4) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#92FF71", 4);
-
-                //Green Triangle
-            } else if (shapes[n].type === 5) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#92FF71", 3);
-
-                //Green Pentagon
-            } else if (shapes[n].type === 6) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#92FF71", 5);
-
-                //Hexagon
-            } else if (shapes[n].type === 7) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#EBB67B", 6);
-
-                //Egg
-            } else if (shapes[n].type === 8) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#EEEEEE", 99);
-
-                //Heptagon
-            } else if (shapes[n].type === 9) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#AD009C", 7);
-
-                //Octagon
-            } else if (shapes[n].type === 10) {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#CA5E5F", 8);
-
-                //Nonagon
-            } else {
-                drawPoly(shapes[n].x, shapes[n].y, shapes[n].size, shapes[n].angle, "#5E71CA", 9);
+            switch(shape.type) {
+                case 0: // Yellow Square
+                    color = "#FFE869";
+                    numSides = 4;
+                    break;
+                case 1: // Red Triangle
+                    color = "#FC7677";
+                    numSides = 3;
+                    break;
+                case 2: // Blue Pentagon
+                case 3: // Blue Alpha Pentagon
+                    color = "#768DFC";
+                    numSides = 5;
+                    break;
+                case 4: // Green Square
+                    color =  "#92FF71";
+                    numSides = 4;
+                    break;
+                case 5: // Green Triangle
+                    color = "#92FF71";
+                    numSides = 3;
+                    break;
+                case 6: // Green Pentagon
+                    color = "#92FF71";
+                    numSides = 5;
+                    break;
+                case 7: // Hexagon
+                    color = "#EBB67B";
+                    numSides = 6;
+                    break;
+                case 8: // Egg
+                    color = "#EEEEEE";
+                    numSides = 99;
+                    break;
+                case 9: // Heptagon
+                    color = "#AD009C";
+                    numSides = 7;
+                    break;
+                case 10: // Octagon
+                    color = "#CA5E5F";
+                    numSides = 8;
+                    break;
+                default: // Nonagon
+                    color = "#5E71CA";
+                    numSides = 9;
             }
-            if (shapes[n].health < shapes[n].maxhealth) {
+            drawPoly(shape.x, shape.y, shape.size, shape.angle, color, numSides);
+
+            if (shape.health < shape.maxhealth) {
                 ctx.fillStyle = "#555555";
-                ctx.roundRect(shapes[n].x - shapes[n].size, shapes[n].y + shapes[n].size + 10, shapes[n].size * 2, 10, 3).fill();
+                ctx.roundRect(shape.x - shape.size, shape.y + shape.size + 10, shape.size * 2, 10, 3).fill();
                 ctx.fillStyle = "#86C680";
-                ctx.roundRect(shapes[n].x - shapes[n].size + 2, shapes[n].y + shapes[n].size + 12, (shapes[n].size * 2) * (shapes[n].health / shapes[n].maxhealth) - 2, 6, 3).fill();
+                ctx.roundRect(shape.x - shape.size + 2, shape.y + shape.size + 12, (shape.size * 2) * (shape.health / shape.maxhealth) - 2, 6, 3).fill();
             }
 
-            shapes[n].x -= shapes[n].initx - offset.totalx - shapes[n].accelx;
-            shapes[n].y -= shapes[n].inity - offset.totaly - shapes[n].accely;
+            shape.x -= shape.initx - offset.totalx - shape.accelx;
+            shape.y -= shape.inity - offset.totaly - shape.accely;
 
-            shapes[n].initx = offset.totalx;
-            shapes[n].inity = offset.totaly;
+            shape.initx = offset.totalx;
+            shape.inity = offset.totaly;
 
-            shapes[n].angle += shapes[n].rotatespeed;
+            shape.angle += shape.rotatespeed;
 
-            if ((shapes[n].accelx > 0.1) || (shapes[n].accelx < -0.1)) {
-                shapes[n].accelx -= shapes[n].accelx * 0.1;
+            if ((shape.accelx > 0.1) || (shape.accelx < -0.1)) {
+                shape.accelx -= shape.accelx * 0.1;
             } else {
-                shapes[n].accelx = 0;
+                shape.accelx = 0;
             }
 
-            if ((shapes[n].accely > 0.1) || (shapes[n].accely < -0.1)) {
-                shapes[n].accely -= shapes[n].accely * 0.1;
+            if ((shape.accely > 0.1) || (shape.accely < -0.1)) {
+                shape.accely -= shape.accely * 0.1;
             } else {
-                shapes[n].accely = 0;
+                shape.accely = 0;
             }
 
             for (var i = 0; i < bullets.length; i += 1) {
-                if ((shapes[n].x + shapes[n].size + shapes[n].accelx + (offset.totalx - bullets[i].initoffx) >= bullets[i].x + (offset.totalx - bullets[i].initoffx)) && (shapes[n].x - shapes[n].size + (offset.totalx - bullets[i].initoffx) <= bullets[i].x + bullets[i].size + (offset.totalx - bullets[i].initoffx) + shapes[n].accelx)) {
-                    if ((shapes[n].y + shapes[n].size + shapes[n].accely + (offset.totaly - bullets[i].initoffy) >= bullets[i].y + (offset.totaly - bullets[i].initoffy)) && (shapes[n].y - shapes[n].size + (offset.totaly - bullets[i].initoffy) <= bullets[i].y + bullets[i].size + (offset.totaly - bullets[i].initoffy) + shapes[n].accely)) {
+                if ((shape.x + shape.size + shape.accelx + (offset.totalx - bullets[i].initoffx) >= bullets[i].x + (offset.totalx - bullets[i].initoffx)) && (shape.x - shape.size + (offset.totalx - bullets[i].initoffx) <= bullets[i].x + bullets[i].size + (offset.totalx - bullets[i].initoffx) + shape.accelx)) {
+                    if ((shape.y + shape.size + shape.accely + (offset.totaly - bullets[i].initoffy) >= bullets[i].y + (offset.totaly - bullets[i].initoffy)) && (shape.y - shape.size + (offset.totaly - bullets[i].initoffy) <= bullets[i].y + bullets[i].size + (offset.totaly - bullets[i].initoffy) + shape.accely)) {
                         console.log("Collision!");
-                        if (shapes[n].health > bullets[i].damage) {
-                            shapes[n].health -= bullets[i].damage;
-                            shapes[n].accelx += Math.cos(angle(bullets[i].x, bullets[i].y, shapes[n].x, shapes[n].y) * (Math.PI / 180)) * (bullets[i].size / 10);
-                            shapes[n].accely += Math.sin(angle(bullets[i].x, bullets[i].y, shapes[n].x, shapes[n].y) * (Math.PI / 180)) * (bullets[i].size / 10);
+                        if (shape.health > bullets[i].damage) {
+                            shape.health -= bullets[i].damage;
+                            shape.accelx += Math.cos(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
+                            shape.accely += Math.sin(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
                         } else {
                             if ((bullets[i].type === 3) && (necrolimit < 20)) {
                                 bullets[bullets.length] = bullets[i];
-                                bullets[bullets.length - 1].x = shapes[n].x;
-                                bullets[bullets.length - 1].y = shapes[n].y;
+                                bullets[bullets.length - 1].x = shape.x;
+                                bullets[bullets.length - 1].y = shape.y;
                             }
                             shapes.splice(n, 1);
                             nShape = 0;
