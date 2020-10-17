@@ -23,6 +23,32 @@ const SHAPE_HEPTAGON = 9;
 const SHAPE_OCTAGON = 10;
 const SHAPE_NONAGON = 11;
 
+// Number of shape types. Increment when adding a new shape.
+const NUM_SHAPE_TYPES = 12;
+
+// Array of relative shape frequencies. Update when adding a new shape.
+// NOTE that these frequencies don't need to add up to any particular number.
+var SHAPE_FREQUENCIES = new Array();
+SHAPE_FREQUENCIES[SHAPE_YELLOW_SQUARE] = 50000;
+SHAPE_FREQUENCIES[SHAPE_EGG] = 10000;
+SHAPE_FREQUENCIES[SHAPE_RED_TRIANGLE] = 10000;
+SHAPE_FREQUENCIES[SHAPE_BLUE_PENTAGON] = 12000;
+SHAPE_FREQUENCIES[SHAPE_HEXAGON] = 2000;
+SHAPE_FREQUENCIES[SHAPE_HEPTAGON] = 2000;
+SHAPE_FREQUENCIES[SHAPE_OCTAGON] = 2000;
+SHAPE_FREQUENCIES[SHAPE_NONAGON] = 2000;
+SHAPE_FREQUENCIES[SHAPE_BLUE_ALPHA_PENTAGON] = 9990;
+SHAPE_FREQUENCIES[SHAPE_GREEN_SQUARE] = 3;
+SHAPE_FREQUENCIES[SHAPE_GREEN_TRIANGLE] = 3;
+SHAPE_FREQUENCIES[SHAPE_GREEN_PENTAGON] = 4;
+
+var sum = 0;
+for (var i = 0; i < NUM_SHAPE_TYPES; i++) {
+    sum += SHAPE_FREQUENCIES[i];
+}
+// Sum of shape frequencies. Used when randomly picking shape type.
+const SUM_SHAPE_FREQUENCIES = sum;
+
 var autofire = false;
 var autospin = false;
 var editmode = false;
@@ -108,8 +134,8 @@ function Barrel(a, type, size, speed, time) {
     this.comment = "";
 }
 
-var barrels = [];
 //Array containing all the barrels, each entry is a Barrel object.
+var barrels = [];
 
 function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
     this.xoffset = barrel.xoffset;
@@ -133,37 +159,17 @@ function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
     this.color = color;
 }
 
+//Array containing all the bullets, each entry is a Bullet object.
 var bullets = [];
-//Array containing all the barrels, each entry is a Barrel object.
 
 function createRandomShape() {
-    // Choose random shape type
-    var random = Math.random();
-    var stype = 0;
-    if (random < 0.50) {
-        stype = SHAPE_YELLOW_SQUARE;
-    } else if (random < 0.60) {
-        stype = SHAPE_EGG;
-    } else if (random < 0.70) {
-        stype = SHAPE_RED_TRIANGLE;
-    } else if (random < 0.82) {
-        stype = SHAPE_BLUE_PENTAGON;
-    } else if (random < 0.84) {
-        stype = SHAPE_HEXAGON;
-    } else if (random < 0.86) {
-        stype = SHAPE_HEPTAGON;
-    } else if (random < 0.88) {
-        stype = SHAPE_OCTAGON;
-    } else if (random < 0.90) {
-        stype = SHAPE_NONAGON;
-    } else if (random < 0.9999) {
-        stype = SHAPE_BLUE_ALPHA_PENTAGON;
-    } else if (random < 0.99993) {
-        stype = SHAPE_GREEN_SQUARE;
-    } else if (random < 0.99996) {
-        stype = SHAPE_GREEN_TRIANGLE;
-    } else {
-        stype = SHAPE_GREEN_PENTAGON;
+    // Choose random shape type based on shape frequencies
+    var random = Math.random() * SUM_SHAPE_FREQUENCIES;
+    var stype;
+    var totalFrequency = 0;
+    for (stype = 0; stype < NUM_SHAPE_TYPES; stype++) {
+        totalFrequency += SHAPE_FREQUENCIES[stype];
+        if (random < totalFrequency) break;
     }
 
     return new Shape((Math.random() * c.width), (Math.random() * c.height), stype);
