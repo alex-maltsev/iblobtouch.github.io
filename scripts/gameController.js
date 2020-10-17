@@ -471,20 +471,10 @@ function drawTank() {
         }
     }
 
-    var btype = 0;
-
-    if (document.getElementById("bullet").value === "trap") {
-        btype = 1;
-    } else if (document.getElementById("bullet").value === "drone") {
-        btype = 2;
-    } else if (document.getElementById("bullet").value === "necro") {
-        btype = 3;
-    } else if (document.getElementById("bullet").value === "auto") {
-        btype = 4;
-    }
+    var btype = parseInt(document.getElementById("barrel_type").value);
 
     if (editmode === true) {
-        if ((btype < 4) || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        if (btype !== BARREL_AUTO_TURRET || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
                 drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
@@ -685,7 +675,7 @@ function drawTank() {
     }
 
     if (editmode === true) {
-        if ((btype === 4) && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        if (btype === BARREL_AUTO_TURRET && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
                 drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
@@ -740,21 +730,12 @@ function drawManager() {
 function placeBarrel() {
     var rangle = angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360;
 
+    // User is holding Shift to set angle in increments
     if (shiftheld === true) {
         rangle -= rangle % (document.getElementById("increment").value);
     }
-    var btype = 0;
 
-    if (document.getElementById("bullet").value === "trap") {
-        btype = 1;
-    } else if (document.getElementById("bullet").value === "drone") {
-        btype = 2;
-    } else if (document.getElementById("bullet").value === "necro") {
-        btype = 3;
-    } else if (document.getElementById("bullet").value === "auto") {
-        btype = 4;
-    }
-
+    var btype = parseInt(document.getElementById("barrel_type").value);
     for (var n = 1; n <= mirrorBarrels; n += 1) {
         barrels[barrels.length] = new Barrel((rangle + 360 + ((360 / mirrorBarrels) * n)) % 360, btype, parseFloat(validateField(document.getElementById("size").value - 10, 5, false)), parseFloat(validateField(document.getElementById("speed").value, 1, false)) / 10, parseFloat(validateField(document.getElementById("time").value * 60, 180, false)));
     }
