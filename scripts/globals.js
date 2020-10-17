@@ -182,87 +182,76 @@ function Shape(x, y, stype) {
             this.color = "#FFE869";
             this.numSides = 4;
             this.size = 20;
-            this.health = 100;
-            this.maxhealth = 100;
+            this.maxHealth = 100;
             break;
         case SHAPE_RED_TRIANGLE:
             this.color = "#FC7677";
             this.numSides = 3;
             this.size = 20;
-            this.health = 300;
-            this.maxhealth = 300;
+            this.maxHealth = 300;
             break;
         case SHAPE_BLUE_PENTAGON:
             this.color = "#768DFC";
             this.numSides = 5;
             this.size = 36;
-            this.health = 1400;
-            this.maxhealth = 1400;
+            this.maxHealth = 1400;
             break;
         case SHAPE_BLUE_ALPHA_PENTAGON:
             this.color = "#768DFC";
             this.numSides = 5;
             this.size = 85;
-            this.health = 20000;
-            this.maxhealth = 20000;
+            this.maxHealth = 20000;
             break;
         case SHAPE_GREEN_SQUARE:
             this.color =  "#92FF71";
             this.numSides = 4;
             this.size = 20;
-            this.health = 2000;
-            this.maxhealth = 2000;
+            this.maxHealth = 2000;
             break;
         case SHAPE_GREEN_TRIANGLE:
             this.color = "#92FF71";
             this.numSides = 3;
             this.size = 25;
-            this.health = 6000;
-            this.maxhealth = 6000;
+            this.maxHealth = 6000;
             break;
         case SHAPE_GREEN_PENTAGON:
             this.color = "#92FF71";
             this.numSides = 5;
             this.size = 36;
-            this.health = 24000;
-            this.maxhealth = 24000;
+            this.maxHealth = 24000;
             break;
         case SHAPE_HEXAGON:
             this.color = "#EBB67B";
             this.numSides = 6;
             this.size = 52;
-            this.health = 1700;
-            this.maxhealth = 1700;
+            this.maxHealth = 1700;
             break;
         case SHAPE_EGG:
             this.color = "#EEEEEE";
             this.numSides = 99;
             this.size = 8;
-            this.health = 50;
-            this.maxhealth = 50;
+            this.maxHealth = 50;
             break;
         case SHAPE_HEPTAGON:
             this.color = "#AD009C";
             this.numSides = 7;
             this.size = 67;
-            this.health = 2000;
-            this.maxhealth = 2000;
+            this.maxHealth = 2000;
             break;
         case SHAPE_OCTAGON:
             this.color = "#CA5E5F";
             this.numSides = 8;
             this.size = 83;
-            this.health = 2300;
-            this.maxhealth = 2300;
+            this.maxHealth = 2300;
             break;
         case SHAPE_NONAGON:
             this.color = "#5E71CA";
             this.numSides = 9;
             this.size = 83;
-            this.health = 2600;
-            this.maxhealth = 2600;
+            this.maxHealth = 2600;
     }
 
+    this.health = this.maxHealth;
     this.initx = offset.totalx;
     this.inity = offset.totaly;
     this.x = x;
