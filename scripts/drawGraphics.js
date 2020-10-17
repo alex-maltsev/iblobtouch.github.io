@@ -253,6 +253,10 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, r)
     return this;
 };
 
+function drawShape(shape) {
+    drawPoly(shape.x, shape.y, shape.size, shape.angle, shape.color, shape.numSides);
+}
+
 function drawPoly(x, y, size, angle, color, sides) {
     ctx.save();
     if (newGraph === false) {

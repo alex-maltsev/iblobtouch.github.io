@@ -117,7 +117,7 @@ function drawTank() {
             } else {
                 shapetimer = document.getElementById("shaperate").value;
                 shapetimer = 120;
-                shapes[shapes.length] = new Shape((Math.random() * c.width), (Math.random() * c.height), Math.random());
+                shapes[shapes.length] = createRandomShape();
             }
         }
         for (var n = 0; n < shapes.length; n += 1) {
@@ -140,56 +140,7 @@ function drawTank() {
                 nShape = n;
             }
 
-            var color;
-            var numSides;
-
-            switch(shape.type) {
-                case 0: // Yellow Square
-                    color = "#FFE869";
-                    numSides = 4;
-                    break;
-                case 1: // Red Triangle
-                    color = "#FC7677";
-                    numSides = 3;
-                    break;
-                case 2: // Blue Pentagon
-                case 3: // Blue Alpha Pentagon
-                    color = "#768DFC";
-                    numSides = 5;
-                    break;
-                case 4: // Green Square
-                    color =  "#92FF71";
-                    numSides = 4;
-                    break;
-                case 5: // Green Triangle
-                    color = "#92FF71";
-                    numSides = 3;
-                    break;
-                case 6: // Green Pentagon
-                    color = "#92FF71";
-                    numSides = 5;
-                    break;
-                case 7: // Hexagon
-                    color = "#EBB67B";
-                    numSides = 6;
-                    break;
-                case 8: // Egg
-                    color = "#EEEEEE";
-                    numSides = 99;
-                    break;
-                case 9: // Heptagon
-                    color = "#AD009C";
-                    numSides = 7;
-                    break;
-                case 10: // Octagon
-                    color = "#CA5E5F";
-                    numSides = 8;
-                    break;
-                default: // Nonagon
-                    color = "#5E71CA";
-                    numSides = 9;
-            }
-            drawPoly(shape.x, shape.y, shape.size, shape.angle, color, numSides);
+            drawShape(shape);
 
             if (shape.health < shape.maxhealth) {
                 ctx.fillStyle = "#555555";

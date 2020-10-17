@@ -9,6 +9,20 @@ const BARREL_DRONE_MAKER = 2;
 const BARREL_NECRO_DRONE_MAKER = 3;
 const BARREL_AUTO_TURRET = 4;
 
+// Shape types
+const SHAPE_YELLOW_SQUARE = 0;
+const SHAPE_RED_TRIANGLE = 1;
+const SHAPE_BLUE_PENTAGON = 2;
+const SHAPE_BLUE_ALPHA_PENTAGON = 3;
+const SHAPE_GREEN_SQUARE = 4;
+const SHAPE_GREEN_TRIANGLE = 5;
+const SHAPE_GREEN_PENTAGON = 6;
+const SHAPE_HEXAGON = 7;
+const SHAPE_EGG = 8;
+const SHAPE_HEPTAGON = 9;
+const SHAPE_OCTAGON = 10;
+const SHAPE_NONAGON = 11;
+
 var autofire = false;
 var autospin = false;
 var editmode = false;
@@ -122,100 +136,131 @@ function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
 var bullets = [];
 //Array containing all the barrels, each entry is a Barrel object.
 
-function Shape(x, y, random) {
+function createRandomShape() {
+    // Choose random shape type
+    var random = Math.random();
     var stype = 0;
-
-    //Yellow Square
     if (random < 0.50) {
-        stype = 0;
-        this.size = 20;
-        this.health = 100;
-        this.maxhealth = 100;
-
-        //Egg
+        stype = SHAPE_YELLOW_SQUARE;
     } else if (random < 0.60) {
-        stype = 8;
-        this.size = 8;
-        this.health = 50;
-        this.maxhealth = 50;
-
-        //Red Triangle
+        stype = SHAPE_EGG;
     } else if (random < 0.70) {
-        stype = 1;
-        this.size = 20;
-        this.health = 300;
-        this.maxhealth = 300;
-
-        //Blue Pentagon
+        stype = SHAPE_RED_TRIANGLE;
     } else if (random < 0.82) {
-        stype = 2;
-        this.size = 36;
-        this.health = 1400;
-        this.maxhealth = 1400;
-
-        //Hexagon
+        stype = SHAPE_BLUE_PENTAGON;
     } else if (random < 0.84) {
-        stype = 7;
-        this.size = 52;
-        this.health = 1700;
-        this.maxhealth = 1700;
-
-        //Heptagon
+        stype = SHAPE_HEXAGON;
     } else if (random < 0.86) {
-        stype = 9;
-        this.size = 67;
-        this.health = 2000;
-        this.maxhealth = 2000;
-
-        //Octagon
+        stype = SHAPE_HEPTAGON;
     } else if (random < 0.88) {
-        stype = 10;
-        this.size = 83;
-        this.health = 2300;
-        this.maxhealth = 2300;
-
-        //Nonagon
+        stype = SHAPE_OCTAGON;
     } else if (random < 0.90) {
-        stype = 11;
-        this.size = 83;
-        this.health = 2600;
-        this.maxhealth = 2600;
-
-        //Blue Alpha Pentagon
+        stype = SHAPE_NONAGON;
     } else if (random < 0.9999) {
-        stype = 3;
-        this.size = 85;
-        this.health = 20000;
-        this.maxhealth = 20000;
-
-
-        //Green Square
+        stype = SHAPE_BLUE_ALPHA_PENTAGON;
     } else if (random < 0.99993) {
-        stype = 4;
-        this.size = 20;
-        this.health = 2000;
-        this.maxhealth = 2000;
-
-        //Green Triangle
+        stype = SHAPE_GREEN_SQUARE;
     } else if (random < 0.99996) {
-        stype = 5;
-        this.size = 25;
-        this.health = 6000;
-        this.maxhealth = 6000;
-
-        //Green Pentagon
+        stype = SHAPE_GREEN_TRIANGLE;
     } else {
-        stype = 6;
-        this.size = 36;
-        this.health = 24000;
-        this.maxhealth = 24000;
+        stype = SHAPE_GREEN_PENTAGON;
+    }
+
+    return new Shape((Math.random() * c.width), (Math.random() * c.height), stype);
+}
+
+function Shape(x, y, stype) {
+    this.type = stype;
+    switch(stype) {
+        case SHAPE_YELLOW_SQUARE:
+            this.color = "#FFE869";
+            this.numSides = 4;
+            this.size = 20;
+            this.health = 100;
+            this.maxhealth = 100;
+            break;
+        case SHAPE_RED_TRIANGLE:
+            this.color = "#FC7677";
+            this.numSides = 3;
+            this.size = 20;
+            this.health = 300;
+            this.maxhealth = 300;
+            break;
+        case SHAPE_BLUE_PENTAGON:
+            this.color = "#768DFC";
+            this.numSides = 5;
+            this.size = 36;
+            this.health = 1400;
+            this.maxhealth = 1400;
+            break;
+        case SHAPE_BLUE_ALPHA_PENTAGON:
+            this.color = "#768DFC";
+            this.numSides = 5;
+            this.size = 85;
+            this.health = 20000;
+            this.maxhealth = 20000;
+            break;
+        case SHAPE_GREEN_SQUARE:
+            this.color =  "#92FF71";
+            this.numSides = 4;
+            this.size = 20;
+            this.health = 2000;
+            this.maxhealth = 2000;
+            break;
+        case SHAPE_GREEN_TRIANGLE:
+            this.color = "#92FF71";
+            this.numSides = 3;
+            this.size = 25;
+            this.health = 6000;
+            this.maxhealth = 6000;
+            break;
+        case SHAPE_GREEN_PENTAGON:
+            this.color = "#92FF71";
+            this.numSides = 5;
+            this.size = 36;
+            this.health = 24000;
+            this.maxhealth = 24000;
+            break;
+        case SHAPE_HEXAGON:
+            this.color = "#EBB67B";
+            this.numSides = 6;
+            this.size = 52;
+            this.health = 1700;
+            this.maxhealth = 1700;
+            break;
+        case SHAPE_EGG:
+            this.color = "#EEEEEE";
+            this.numSides = 99;
+            this.size = 8;
+            this.health = 50;
+            this.maxhealth = 50;
+            break;
+        case SHAPE_HEPTAGON:
+            this.color = "#AD009C";
+            this.numSides = 7;
+            this.size = 67;
+            this.health = 2000;
+            this.maxhealth = 2000;
+            break;
+        case SHAPE_OCTAGON:
+            this.color = "#CA5E5F";
+            this.numSides = 8;
+            this.size = 83;
+            this.health = 2300;
+            this.maxhealth = 2300;
+            break;
+        case SHAPE_NONAGON:
+            this.color = "#5E71CA";
+            this.numSides = 9;
+            this.size = 83;
+            this.health = 2600;
+            this.maxhealth = 2600;
     }
 
     this.initx = offset.totalx;
     this.inity = offset.totaly;
     this.x = x;
     this.y = y;
-    this.type = stype;
     this.angle = 0;
     this.rotatespeed = Math.random() - 0.5;
     this.accelx = 0;
