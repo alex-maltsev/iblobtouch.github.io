@@ -142,13 +142,6 @@ function drawTank() {
 
             drawShape(shape);
 
-            if (shape.health < shape.maxHealth) {
-                ctx.fillStyle = "#555555";
-                ctx.roundRect(shape.x - shape.size, shape.y + shape.size + 10, shape.size * 2, 10, 3).fill();
-                ctx.fillStyle = "#86C680";
-                ctx.roundRect(shape.x - shape.size + 2, shape.y + shape.size + 12, (shape.size * 2) * (shape.health / shape.maxHealth) - 2, 6, 3).fill();
-            }
-
             shape.x -= shape.initx - offset.totalx - shape.accelx;
             shape.y -= shape.inity - offset.totaly - shape.accely;
 

@@ -255,6 +255,13 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, r)
 
 function drawShape(shape) {
     drawPoly(shape.x, shape.y, shape.size, shape.angle, shape.color, shape.numSides);
+
+    if (shape.health < shape.maxHealth) {
+        ctx.fillStyle = "#555555";
+        ctx.roundRect(shape.x - shape.size, shape.y + shape.size + 10, shape.size * 2, 10, 3).fill();
+        ctx.fillStyle = "#86C680";
+        ctx.roundRect(shape.x - shape.size + 2, shape.y + shape.size + 12, (shape.size * 2) * (shape.health / shape.maxHealth) - 2, 6, 3).fill();
+    }
 }
 
 function drawPoly(x, y, size, angle, color, sides) {
