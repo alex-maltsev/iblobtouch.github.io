@@ -97,20 +97,20 @@ function Barrel(a, type, size, speed, time) {
 var barrels = [];
 //Array containing all the barrels, each entry is a Barrel object.
 
-function Bullet(n, size, speed, time, x, y, targetx, targety, spr, color) {
-    this.xoffset = barrels[n].xoffset;
-    this.yoffset = barrels[n].yoffset;
+function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
+    this.xoffset = barrel.xoffset;
+    this.yoffset = barrel.yoffset;
     this.x = x;
     this.y = y;
-    this.bangle = barrels[n].angle + (Math.random() * spr) - (spr / 2);
+    this.bangle = barrel.angle + (Math.random() * spr) - (spr / 2);
     this.size = size;
-    this.knockback = barrels[n].knockback;
-    this.damage = barrels[n].damage;
+    this.knockback = barrel.knockback;
+    this.damage = barrel.damage;
     this.speed = speed;
     this.health = 100;
-    this.distance = barrels[n].length;
+    this.distance = barrel.length;
     this.time = time;
-    this.type = barrels[n].type;
+    this.type = barrel.type;
     this.targetx = targetx;
     this.targety = targety;
     this.initoffx = offset.totalx;
