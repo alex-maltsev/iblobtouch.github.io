@@ -116,6 +116,11 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
     ctx.restore();
 }
 
+function drawTankRoundBase() {
+    var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
+    drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+}
+
 function drawBullet(x, y, size, transparency, color) {
     //Draw a bullet using the given parameters.
 

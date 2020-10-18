@@ -440,7 +440,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
     if (shape === "square") {
         ctx.globalAlpha = tankalpha;
@@ -499,7 +499,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
 
     if (shape === "spike") {
@@ -518,7 +518,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
     if (shape === "landmine") {
         ctx.save();
@@ -544,7 +544,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
     if (shape === "dominator") {
         ctx.save();
@@ -554,7 +554,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
     if (shape === "base") {
         ctx.save();
@@ -564,7 +564,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
     }
     if (shape === "trap") {
         ctx.globalAlpha = tankalpha;
@@ -582,7 +582,7 @@ function drawTank() {
         ctx.clip();
         ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
         ctx.restore();
-        drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+        drawTankRoundBase();
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
             drawPoly(tankpointx, tankpointy, tanksize / 1.5, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
@@ -603,10 +603,8 @@ function drawTank() {
         }
     }
 
-    //Draw the body of the tank on top of everything.
-
+    //Loop through each barrel.
     for (var n = 0; n < barrels.length; n += 1) {
-        //Loop through each barrel.
         let barrel = barrels[n];
         if ((angle(tankpointx, tankpointy, mouse.x, mouse.y) >= barrel.angle - 1) && (angle(tankpointx, tankpointy, mouse.x, mouse.y) <= barrel.angle + 1) && (editmode === true)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
