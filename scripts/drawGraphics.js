@@ -2,11 +2,7 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
     ctx.save();
     length = Math.abs(length);
     width = Math.abs(width);
-    if (newGraph === false) {
-        ctx.strokeStyle = "rgba(85, 85, 85, " + alpha + ")";
-    } else {
-        ctx.strokeStyle = ColorLuminance(colour, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(colour);
     ctx.lineWidth = 5;
     ctx.fillStyle = colour;
     ctx.globalAlpha = alpha;
@@ -122,10 +118,7 @@ function drawTankRoundBase() {
 }
 
 function drawBullet(x, y, size, transparency, color) {
-    //Draw a bullet using the given parameters.
-
     var bColor = "";
-
     if (color === "#ffffff") {
         bColor = document.getElementById("color").value;
     } else {
@@ -133,11 +126,7 @@ function drawBullet(x, y, size, transparency, color) {
     }
 
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(bColor, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(bColor);
     ctx.lineWidth = 5;
     ctx.fillStyle = bColor;
     ctx.globalAlpha = transparency;
@@ -151,20 +140,14 @@ function drawBullet(x, y, size, transparency, color) {
 
 function drawTrap(x, y, size, angle, transparency, color) {
     var bColor = "";
-
     if (color === "#ffffff") {
         bColor = document.getElementById("color").value;
     } else {
         bColor = color;
     }
 
-
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(bColor, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(bColor);
     ctx.lineWidth = 5;
     ctx.fillStyle = bColor;
     ctx.globalAlpha = transparency;
@@ -191,20 +174,14 @@ function drawTrap(x, y, size, angle, transparency, color) {
 
 function drawDrone(x, y, size, angle, color) {
     var bColor = "";
-
     if (color === "#ffffff") {
         bColor = document.getElementById("color").value;
     } else {
         bColor = color;
     }
 
-
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(bColor, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(bColor);
     ctx.lineWidth = 5;
     ctx.fillStyle = bColor;
     ctx.translate(x, y);
@@ -234,11 +211,7 @@ function drawNecro(x, y, size, angle, color) {
 
     ctx.save();
     ctx.fillStyle = bColor;
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(bColor, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(bColor);
     ctx.lineWidth = 10;
     ctx.translate(x, y);
     ctx.rotate(angle * (Math.PI / 180));
@@ -271,11 +244,7 @@ function drawShape(shape) {
 
 function drawPoly(x, y, size, angle, color, sides) {
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(color, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(color);
     ctx.lineWidth = 5;
     ctx.fillStyle = color;
     ctx.translate(x, y);
@@ -293,11 +262,7 @@ function drawPoly(x, y, size, angle, color, sides) {
 
 function drawConc(x, y, size, angle, color, sides, poly) {
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(color, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(color);
     ctx.lineWidth = 5;
     ctx.fillStyle = color;
     ctx.translate(x, y);
@@ -317,11 +282,7 @@ function drawConc(x, y, size, angle, color, sides, poly) {
 
 function drawRect(x, y, size, angle, color) {
     ctx.save();
-    if (newGraph === false) {
-        ctx.strokeStyle = "#555555";
-    } else {
-        ctx.strokeStyle = ColorLuminance(color, document.getElementById("luminance").value);
-    }
+    ctx.strokeStyle = getStrokeStyle(color);
     ctx.lineWidth = 5;
     ctx.fillStyle = color;
     ctx.translate(x, y);
@@ -332,4 +293,8 @@ function drawRect(x, y, size, angle, color) {
     ctx.fill();
     ctx.stroke();
     ctx.restore();
+}
+
+function getStrokeStyle(color) {
+    return newGraph ? ColorLuminance(color, document.getElementById("luminance").value) : "#555555";
 }
