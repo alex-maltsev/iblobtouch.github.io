@@ -259,106 +259,8 @@ function drawTank() {
         console.log(autoangle + 180);
     }
 
-    for (var n = 0; n < bullets.length; n += 1) {
-        //Loop through each bullet.
-
-        var isclose = false;
-
-        if (bullets[n].type > 1) {
-            for (var i = 0; i < bullets.length; i += 1) {
-                if ((bullets[i].type > 1) && (i != n) && (bullets[n].x >= bullets[i].x - bullets[i].size) && (bullets[n].x <= bullets[i].x + bullets[i].size) && (bullets[n].y >= bullets[i].y - bullets[i].size) && (bullets[n].y <= bullets[i].y + bullets[i].size)) {
-                    bullets[n].x += (bullets[n].x - bullets[i].x) * 0.05;
-                    bullets[n].y += (bullets[n].y - bullets[i].y) * 0.05;
-                }
-            }
-        }
-
-        if ((bullets[n].type === 1) && (bullets[n].speed > 0)) {
-            bullets[n].speed -= bullets[n].speed * 0.005;
-            //If it's a trap, decrease speed each tick.
-        }
-
-        if (((bullets[n].type === 2) || (bullets[n].type === 3)) && (mouse.rightdown === false)) {
-            bullets[n].targetx = mouse.x;
-            bullets[n].targety = mouse.y;
-
-            bullets[n].x += xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed / 2, 0) + (offset.totalx - bullets[n].initoffx);
-
-            bullets[n].y += ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed / 2, 0) + (offset.totaly - bullets[n].initoffy);
-
-            bullets[n].initoffx = offset.totalx;
-            bullets[n].initoffy = offset.totaly;
-        } else if (((bullets[n].type === 2) || (bullets[n].type === 3)) && (mouse.rightdown === true)) {
-            bullets[n].targetx = mouse.x;
-            bullets[n].targety = mouse.y;
-
-            bullets[n].x -= xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed / 2, 0) + (offset.totalx - bullets[n].initoffx);
-
-            bullets[n].y -= ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed / 2, 0) + (offset.totaly - bullets[n].initoffy);
-
-            bullets[n].initoffx = offset.totalx;
-            bullets[n].initoffy = offset.totaly;
-        } else if ((bullets[n].type === 1) || (bullets[n].type === 4)) {
-
-            bullets[n].targetx += xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle);
-            bullets[n].targety += ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle);
-
-            bullets[n].x += xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle) + (offset.totalx - bullets[n].initoffx);
-
-            bullets[n].y += ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle) + (offset.totaly - bullets[n].initoffy);
-
-            bullets[n].initoffx = offset.totalx;
-            bullets[n].initoffy = offset.totaly;
-
-            //Get the bullets current x and y based on distance, offset and angle.
-        } else {
-
-            bullets[n].targetx += xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle);
-            bullets[n].targety += ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle);
-
-            bullets[n].x += xdistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle) + (offset.totalx - bullets[n].initoffx);
-
-            bullets[n].y += ydistancefrom(bullets[n].x, bullets[n].y, bullets[n].targetx, bullets[n].targety, bullets[n].speed, bullets[n].bangle) + (offset.totaly - bullets[n].initoffy);
-
-            bullets[n].initoffx = offset.totalx;
-            bullets[n].initoffy = offset.totaly;
-        }
-        if (editmode === false) {
-            if (bullets[n].type === 0) {
-                drawBullet(bullets[n].x, bullets[n].y, bullets[n].size, bullets[n].transparency, bullets[n].color);
-            }
-            //Display as a bullet if it's a bullet.
-
-            if (bullets[n].type === 1) {
-                drawTrap(bullets[n].x, bullets[n].y, bullets[n].size, bullets[n].angle, bullets[n].transparency, bullets[n].color);
-            }
-            //Display as a trap if it's a trap.
-
-            if (bullets[n].type === 2) {
-                drawPoly(bullets[n].x, bullets[n].y, bullets[n].size, angle(bullets[n].x, bullets[n].y, mouse.x, mouse.y), bullets[n].color, 3);
-            }
-            //Display as a trap if it's a drone.
-
-            if (bullets[n].type === 3) {
-                drawPoly(bullets[n].x, bullets[n].y, bullets[n].size, angle(bullets[n].x, bullets[n].y, mouse.x, mouse.y), bullets[n].color, 4);
-            }
-            //Display as a trap if it's a drone.
-
-            if (bullets[n].type === 4) {
-                drawBullet(bullets[n].x, bullets[n].y, bullets[n].size, bullets[n].transparency, bullets[n].color);
-            }
-            //Display as a bullet if it's a bullet.
-        }
-        if (bullets[n].time <= 20) {
-            bullets[n].transparency = bullets[n].time / 20;
-        }
-        if (bullets[n].time <= 1) {
-            bullets.splice(n, 1);
-            //When a bullet times out, delete it.
-        } else if ((bullets[n].type < 2) || (bullets[n].type == 4)) {
-            bullets[n].time -= 1;
-            //If it's a bullet, decrease it's time left to live by 1 each frame.
-        }
+    if (editmode === false) {
+        moveBullets();
     }
 
     //Loop through each barrel.
@@ -426,6 +328,107 @@ function drawTank() {
                 drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
             }
+        }
+    }
+}
+
+function moveBullets() {
+    for (var n = 0; n < bullets.length; n += 1) {
+        let bullet = bullets[n];
+
+        if (bullet.type > 1) {
+            for (var i = 0; i < bullets.length; i += 1) {
+                if ((bullets[i].type > 1) && (i != n) && (bullet.x >= bullets[i].x - bullets[i].size) && (bullet.x <= bullets[i].x + bullets[i].size) && (bullet.y >= bullets[i].y - bullets[i].size) && (bullet.y <= bullets[i].y + bullets[i].size)) {
+                    bullet.x += (bullet.x - bullets[i].x) * 0.05;
+                    bullet.y += (bullet.y - bullets[i].y) * 0.05;
+                }
+            }
+        }
+
+        if ((bullet.type === 1) && (bullet.speed > 0)) {
+            bullet.speed -= bullet.speed * 0.005;
+            //If it's a trap, decrease speed each tick.
+        }
+
+        if (((bullet.type === 2) || (bullet.type === 3)) && (mouse.rightdown === false)) {
+            bullet.targetx = mouse.x;
+            bullet.targety = mouse.y;
+
+            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totalx - bullet.initoffx);
+
+            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totaly - bullet.initoffy);
+
+            bullet.initoffx = offset.totalx;
+            bullet.initoffy = offset.totaly;
+        } else if (((bullet.type === 2) || (bullet.type === 3)) && (mouse.rightdown === true)) {
+            bullet.targetx = mouse.x;
+            bullet.targety = mouse.y;
+
+            bullet.x -= xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totalx - bullet.initoffx);
+
+            bullet.y -= ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totaly - bullet.initoffy);
+
+            bullet.initoffx = offset.totalx;
+            bullet.initoffy = offset.totaly;
+        } else if ((bullet.type === 1) || (bullet.type === 4)) {
+
+            bullet.targetx += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
+            bullet.targety += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
+
+            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totalx - bullet.initoffx);
+
+            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totaly - bullet.initoffy);
+
+            bullet.initoffx = offset.totalx;
+            bullet.initoffy = offset.totaly;
+
+            //Get the bullets current x and y based on distance, offset and angle.
+        } else {
+
+            bullet.targetx += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
+            bullet.targety += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
+
+            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totalx - bullet.initoffx);
+
+            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totaly - bullet.initoffy);
+
+            bullet.initoffx = offset.totalx;
+            bullet.initoffy = offset.totaly;
+        }
+        if (bullet.type === 0) {
+            drawBullet(bullet.x, bullet.y, bullet.size, bullet.transparency, bullet.color);
+        }
+        //Display as a bullet if it's a bullet.
+
+        if (bullet.type === 1) {
+            drawTrap(bullet.x, bullet.y, bullet.size, bullet.angle, bullet.transparency, bullet.color);
+        }
+        //Display as a trap if it's a trap.
+
+        if (bullet.type === 2) {
+            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 3);
+        }
+        //Display as a trap if it's a drone.
+
+        if (bullet.type === 3) {
+            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 4);
+        }
+        //Display as a trap if it's a drone.
+
+        if (bullet.type === 4) {
+            drawBullet(bullet.x, bullet.y, bullet.size, bullet.transparency, bullet.color);
+        }
+        //Display as a bullet if it's a bullet.
+        
+        if (bullet.time <= 20) {
+            bullet.transparency = bullet.time / 20;
+        }
+        if (bullet.time <= 1) {
+            bullets.splice(n, 1);
+            //When a bullet times out, delete it.
+        } else if ((bullet.type < 2) || (bullet.type == 4)) {
+            bullet.time -= 1;
+            //If it's a bullet, decrease it's time left to live by 1 each frame.
         }
     }
 }
