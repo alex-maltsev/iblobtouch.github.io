@@ -80,8 +80,6 @@ function drawTank() {
 
     var tankSize = parseFloat(validateField(document.getElementById("body").value, 32));
     var shape = document.getElementById("shape").value;
-    var customangle = parseFloat(validateField(document.getElementById("customangle").value, 0));
-    var customsangle = parseFloat(validateField(document.getElementById("customsangle").value, 0));
     var mouseAngle = angle(tankpointx, tankpointy, mouse.x, mouse.y);
     var orientationAngle = editmode ? 0 : mouseAngle;
 

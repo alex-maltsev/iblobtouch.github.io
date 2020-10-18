@@ -199,10 +199,6 @@ function drawTankBody(shape, tankSize, orientationAngle) {
         ctx.fillStyle = document.getElementById("scolo").value;
         drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
         ctx.save();
-        ctx.globalAlpha = tankalpha;
-        ctx.fillStyle = document.getElementById("scolo").value;
-        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
-        ctx.save();
         ctx.beginPath();
         ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
@@ -248,6 +244,8 @@ function drawTankBody(shape, tankSize, orientationAngle) {
         drawPoly(tankpointx, tankpointy, tankSize / 1.5, orientationAngle + 45, ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
     }
     if (shape === "custom") {
+        var customangle = parseFloat(validateField(document.getElementById("customangle").value, 0));
+        var customsangle = parseFloat(validateField(document.getElementById("customsangle").value, 0));
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
