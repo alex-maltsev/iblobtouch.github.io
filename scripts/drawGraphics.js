@@ -113,18 +113,14 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
 }
 
 // Draws the part of the tank body that goes below the barrels
-function drawTankBase(shape, tankSize) {
+function drawTankBase(shape, tankSize, orientationAngle) {
     //Dominator Base
     if (shape === "dominator") {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
     }
 
     //Protector Base
@@ -133,16 +129,12 @@ function drawTankBase(shape, tankSize) {
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) + 22.5, document.getElementById("scolo").value, 8)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 22.5, document.getElementById("scolo").value, 8)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle + 22.5, document.getElementById("scolo").value, 8)
     }
 }
 
 // Draws the part of the tank body that goes above the barrels
-function drawTankBody(shape, tankSize) {
+function drawTankBody(shape, tankSize, orientationAngle) {
     if (shape === "circle") {
         ctx.save();
         ctx.beginPath();
@@ -155,53 +147,29 @@ function drawTankBody(shape, tankSize) {
     }
     if (shape === "square") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize + 12, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), document.getElementById("color").value, 4)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize + 12, 45, document.getElementById("color").value, 4)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize + 12, orientationAngle + 45, document.getElementById("color").value, 4)
     }
     if (shape === "triangle") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize + 9, (angle(tankpointx, tankpointy, mouse.x, mouse.y) - 30), document.getElementById("color").value, 3)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize + 9, -30, document.getElementById("color").value, 3)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize + 9, orientationAngle - 30, document.getElementById("color").value, 3)
     }
     if (shape === "pentagon") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize + 10, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 18), document.getElementById("color").value, 5)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize + 10, 18, document.getElementById("color").value, 5)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize + 10, orientationAngle + 18, document.getElementById("color").value, 5)
     }
     if (shape === "mothership") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value, 16)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("color").value, 16)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("color").value, 16)
     }
     if (shape === "rect") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawRect(tankpointx, tankpointy, tankSize, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value)
-        } else {
-            drawRect(tankpointx, tankpointy, tankSize, 0, document.getElementById("color").value)
-        }
+        drawRect(tankpointx, tankpointy, tankSize, orientationAngle, document.getElementById("color").value)
     }
     if (shape === "smasher") {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
         ctx.save();
         ctx.beginPath();
         ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
@@ -211,16 +179,11 @@ function drawTankBody(shape, tankSize) {
         ctx.restore();
         drawTankRoundBase(tankSize);
     }
-
     if (shape === "spike") {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
-        if (editmode === false) {
-            drawConc(tankpointx, tankpointy, tankSize * 1.4, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 12, (tankSize + 4) / 1.2)
-        } else {
-            drawConc(tankpointx, tankpointy, tankSize * 1.4, 0, document.getElementById("scolo").value, 12, (tankSize + 4) / 1.2)
-        }
+        drawConc(tankpointx, tankpointy, tankSize * 1.4, orientationAngle, document.getElementById("scolo").value, 12, (tankSize + 4) / 1.2)
         ctx.save();
         ctx.beginPath();
         ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
@@ -234,19 +197,11 @@ function drawTankBody(shape, tankSize) {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) / 2, document.getElementById("scolo").value, 6)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize * 1.3, orientationAngle, document.getElementById("scolo").value, 6)
         ctx.save();
         ctx.beginPath();
         ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
@@ -278,11 +233,7 @@ function drawTankBody(shape, tankSize) {
     }
     if (shape === "trap") {
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawConc(tankpointx, tankpointy, tankSize + 3, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 90), document.getElementById("color").value, 3, (tankSize + 3) / 2.5)
-        } else {
-            drawConc(tankpointx, tankpointy, tankSize + 3, 90, document.getElementById("color").value, 3, (tankSize + 3) / 2.5)
-        }
+        drawConc(tankpointx, tankpointy, tankSize + 3, orientationAngle + 90, document.getElementById("color").value, 3, (tankSize + 3) / 2.5)
     }
     if (shape === "drive") {
         ctx.save();
@@ -294,23 +245,14 @@ function drawTankBody(shape, tankSize) {
         ctx.restore();
         drawTankRoundBase(tankSize);
         ctx.globalAlpha = tankalpha;
-        if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tankSize / 1.5, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
-        } else {
-            drawPoly(tankpointx, tankpointy, tankSize / 1.5, 45, ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
-        }
+        drawPoly(tankpointx, tankpointy, tankSize / 1.5, orientationAngle + 45, ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
     }
     if (shape === "custom") {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
-        if (editmode === false) {
-            drawConc(tankpointx, tankpointy, document.getElementById("customssize").value, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + customsangle), document.getElementById("scolo").value, document.getElementById("customssides").value, document.getElementById("customssize").value / document.getElementById("customsdist").value)
-            drawConc(tankpointx, tankpointy, tankSize, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + customangle), document.getElementById("color").value, document.getElementById("customsides").value, tankSize / document.getElementById("customdistance").value)
-        } else {
-            drawConc(tankpointx, tankpointy, document.getElementById("customssize").value, customsangle, document.getElementById("scolo").value, document.getElementById("customssides").value, document.getElementById("customssize").value / document.getElementById("customsdist").value)
-            drawConc(tankpointx, tankpointy, tankSize, customangle, document.getElementById("color").value, document.getElementById("customsides").value, tankSize / document.getElementById("customdistance").value)
-        }
+        drawConc(tankpointx, tankpointy, document.getElementById("customssize").value, orientationAngle + customsangle, document.getElementById("scolo").value, document.getElementById("customssides").value, document.getElementById("customssize").value / document.getElementById("customsdist").value);
+        drawConc(tankpointx, tankpointy, tankSize, orientationAngle + customangle, document.getElementById("color").value, document.getElementById("customsides").value, tankSize / document.getElementById("customdistance").value);
     }
 }
 

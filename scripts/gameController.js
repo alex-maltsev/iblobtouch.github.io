@@ -82,8 +82,10 @@ function drawTank() {
     var shape = document.getElementById("shape").value;
     var customangle = parseFloat(validateField(document.getElementById("customangle").value, 0));
     var customsangle = parseFloat(validateField(document.getElementById("customsangle").value, 0));
+    var mouseAngle = angle(tankpointx, tankpointy, mouse.x, mouse.y);
+    var orientationAngle = editmode ? 0 : mouseAngle;
 
-    drawTankBase(shape, tankSize);
+    drawTankBase(shape, tankSize, orientationAngle);
 
     if (editmode === false) {
         if (document.getElementById("spawn").checked === true) {
@@ -377,7 +379,7 @@ function drawTank() {
         if (barrel.reload > 0) {
             barrel.reload -= 1;
         }
-        var anglePlace = angle(tankpointx, tankpointy, mouse.x, mouse.y);
+        var anglePlace = mouseAngle;
         if (anglePlace < 0) {
             anglePlace = 360 + anglePlace;
         }
@@ -396,7 +398,7 @@ function drawTank() {
     if (editmode === true) {
         if (btype !== BARREL_AUTO_TURRET || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * tankSize))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
-                drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
+                drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
             }
         }
@@ -405,12 +407,12 @@ function drawTank() {
         mouse.y = (Math.sin((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointy;
     }
 
-    drawTankBody(shape, tankSize);
+    drawTankBody(shape, tankSize, orientationAngle);
 
     //Loop through each barrel.
     for (var n = 0; n < barrels.length; n += 1) {
         let barrel = barrels[n];
-        if (editmode === true && (angle(tankpointx, tankpointy, mouse.x, mouse.y) >= barrel.angle - 1) && (angle(tankpointx, tankpointy, mouse.x, mouse.y) <= barrel.angle + 1)) {
+        if (editmode === true && (mouseAngle >= barrel.angle - 1) && (mouseAngle <= barrel.angle + 1)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
             if (input.f === true) {
                 barrels.splice(n, 1);
@@ -423,7 +425,7 @@ function drawTank() {
     if (editmode === true) {
         if (btype === BARREL_AUTO_TURRET && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * tankSize))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
-                drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
+                drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
             }
         }
