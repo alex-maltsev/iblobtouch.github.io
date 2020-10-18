@@ -78,7 +78,7 @@ function drawTank() {
     var tankpointx = c.width / 2 - accel.x * 20;
     var tankpointy = c.height / 2 - accel.y * 20;
 
-    var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
+    var tankSize = parseFloat(validateField(document.getElementById("body").value, 32));
     var shape = document.getElementById("shape").value;
     var customangle = parseFloat(validateField(document.getElementById("customangle").value, 0));
     var customsangle = parseFloat(validateField(document.getElementById("customsangle").value, 0));
@@ -90,9 +90,9 @@ function drawTank() {
         ctx.fillStyle = document.getElementById("scolo").value;
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 0, document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
         }
     }
     //Protector Base
@@ -102,9 +102,9 @@ function drawTank() {
         ctx.fillStyle = document.getElementById("scolo").value;
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) + 22.5, document.getElementById("scolo").value, 8)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) + 22.5, document.getElementById("scolo").value, 8)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 22.5, document.getElementById("scolo").value, 8)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 22.5, document.getElementById("scolo").value, 8)
         }
     }
 
@@ -123,7 +123,7 @@ function drawTank() {
         for (var n = 0; n < shapes.length; n += 1) {
             let shape = shapes[n];
 
-            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < parseFloat(validateField(document.getElementById("body").value, 32)) + shape.size / 2) {
+            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < tankSize + shape.size / 2) {
                 if (shape.health > parseFloat(validateField(document.getElementById("bodydamage").value, 50))) {
                     shape.health -= parseFloat(validateField(document.getElementById("bodydamage").value, 50));
                     shape.accelx += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
@@ -220,7 +220,6 @@ function drawTank() {
 
                 var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
                 var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
-                var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
 
                 if (barrel.hasOwnProperty("b") === true) {
                     if ((barrel.type < 4) || (shapes.length === 0)) {
@@ -231,8 +230,8 @@ function drawTank() {
                             mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                     } else {
                         bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
-                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrel.angle) + tankpointx + xdif,
-                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tanksize, barrel.angle) + tankpointy - ydif,
+                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointx + xdif,
+                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointy - ydif,
                             shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
                             shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                     }
@@ -410,7 +409,7 @@ function drawTank() {
             if (input.f === true) {
                 barrels.splice(n, 1);
             }
-        } else if ((barrel.type < 4) || ((barrel.xoffset >= 0) || (barrel.xoffset < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        } else if ((barrel.type < 4) || ((barrel.xoffset >= 0) || barrel.xoffset < -1 * tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
@@ -418,7 +417,7 @@ function drawTank() {
     var btype = parseInt(document.getElementById("barrel_type").value);
 
     if (editmode === true) {
-        if (btype !== BARREL_AUTO_TURRET || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        if (btype !== BARREL_AUTO_TURRET || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * tankSize))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
                 drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.
@@ -429,58 +428,57 @@ function drawTank() {
         mouse.y = (Math.sin((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointy;
     }
 
-    var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
     var shape = document.getElementById("shape").value;
 
     if (shape === "circle") {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
     if (shape === "square") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize + 12, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), document.getElementById("color").value, 4)
+            drawPoly(tankpointx, tankpointy, tankSize + 12, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), document.getElementById("color").value, 4)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize + 12, 45, document.getElementById("color").value, 4)
+            drawPoly(tankpointx, tankpointy, tankSize + 12, 45, document.getElementById("color").value, 4)
         }
     }
 
     if (shape === "triangle") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize + 9, (angle(tankpointx, tankpointy, mouse.x, mouse.y) - 30), document.getElementById("color").value, 3)
+            drawPoly(tankpointx, tankpointy, tankSize + 9, (angle(tankpointx, tankpointy, mouse.x, mouse.y) - 30), document.getElementById("color").value, 3)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize + 9, -30, document.getElementById("color").value, 3)
+            drawPoly(tankpointx, tankpointy, tankSize + 9, -30, document.getElementById("color").value, 3)
         }
     }
     if (shape === "pentagon") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize + 10, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 18), document.getElementById("color").value, 5)
+            drawPoly(tankpointx, tankpointy, tankSize + 10, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 18), document.getElementById("color").value, 5)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize + 10, 18, document.getElementById("color").value, 5)
+            drawPoly(tankpointx, tankpointy, tankSize + 10, 18, document.getElementById("color").value, 5)
         }
     }
     if (shape === "mothership") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value, 16)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value, 16)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 0, document.getElementById("color").value, 16)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("color").value, 16)
         }
     }
     if (shape === "rect") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawRect(tankpointx, tankpointy, tanksize, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value)
+            drawRect(tankpointx, tankpointy, tankSize, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("color").value)
         } else {
-            drawRect(tankpointx, tankpointy, tanksize, 0, document.getElementById("color").value)
+            drawRect(tankpointx, tankpointy, tankSize, 0, document.getElementById("color").value)
         }
     }
     if (shape === "smasher") {
@@ -488,18 +486,18 @@ function drawTank() {
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 0, document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
         }
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
 
     if (shape === "spike") {
@@ -507,87 +505,87 @@ function drawTank() {
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         if (editmode === false) {
-            drawConc(tankpointx, tankpointy, tanksize * 1.4, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 12, (tanksize + 4) / 1.2)
+            drawConc(tankpointx, tankpointy, tankSize * 1.4, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 12, (tankSize + 4) / 1.2)
         } else {
-            drawConc(tankpointx, tankpointy, tanksize * 1.4, 0, document.getElementById("scolo").value, 12, (tanksize + 4) / 1.2)
+            drawConc(tankpointx, tankpointy, tankSize * 1.4, 0, document.getElementById("scolo").value, 12, (tankSize + 4) / 1.2)
         }
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
     if (shape === "landmine") {
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) / 2, document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)) / 2, document.getElementById("scolo").value, 6)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 0, document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
         }
         ctx.save();
         ctx.globalAlpha = tankalpha;
         ctx.fillStyle = document.getElementById("scolo").value;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, (angle(tankpointx, tankpointy, mouse.x, mouse.y)), document.getElementById("scolo").value, 6)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize * 1.3, 0, document.getElementById("scolo").value, 6)
+            drawPoly(tankpointx, tankpointy, tankSize * 1.3, 0, document.getElementById("scolo").value, 6)
         }
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
     if (shape === "dominator") {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
     if (shape === "base") {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
     }
     if (shape === "trap") {
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawConc(tankpointx, tankpointy, tanksize + 3, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 90), document.getElementById("color").value, 3, (tanksize + 3) / 2.5)
+            drawConc(tankpointx, tankpointy, tankSize + 3, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 90), document.getElementById("color").value, 3, (tankSize + 3) / 2.5)
         } else {
-            drawConc(tankpointx, tankpointy, tanksize + 3, 90, document.getElementById("color").value, 3, (tanksize + 3) / 2.5)
+            drawConc(tankpointx, tankpointy, tankSize + 3, 90, document.getElementById("color").value, 3, (tankSize + 3) / 2.5)
         }
     }
     if (shape === "drive") {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(tankpointx, tankpointy, tanksize, 0, Math.PI * 2, true);
+        ctx.arc(tankpointx, tankpointy, tankSize, 0, Math.PI * 2, true);
         ctx.closePath();
         ctx.clip();
-        ctx.clearRect(tankpointx - tanksize, tankpointy - tanksize, tanksize * 2, tanksize * 2);
+        ctx.clearRect(tankpointx - tankSize, tankpointy - tankSize, tankSize * 2, tankSize * 2);
         ctx.restore();
-        drawTankRoundBase();
+        drawTankRoundBase(tankSize);
         ctx.globalAlpha = tankalpha;
         if (editmode === false) {
-            drawPoly(tankpointx, tankpointy, tanksize / 1.5, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
+            drawPoly(tankpointx, tankpointy, tankSize / 1.5, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + 45), ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
         } else {
-            drawPoly(tankpointx, tankpointy, tanksize / 1.5, 45, ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
+            drawPoly(tankpointx, tankpointy, tankSize / 1.5, 45, ColorLuminance(document.getElementById("color").value, document.getElementById("luminance").value), 4)
         }
     }
     if (shape === "custom") {
@@ -596,10 +594,10 @@ function drawTank() {
         ctx.fillStyle = document.getElementById("scolo").value;
         if (editmode === false) {
             drawConc(tankpointx, tankpointy, document.getElementById("customssize").value, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + customsangle), document.getElementById("scolo").value, document.getElementById("customssides").value, document.getElementById("customssize").value / document.getElementById("customsdist").value)
-            drawConc(tankpointx, tankpointy, tanksize, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + customangle), document.getElementById("color").value, document.getElementById("customsides").value, tanksize / document.getElementById("customdistance").value)
+            drawConc(tankpointx, tankpointy, tankSize, (angle(tankpointx, tankpointy, mouse.x, mouse.y) + customangle), document.getElementById("color").value, document.getElementById("customsides").value, tankSize / document.getElementById("customdistance").value)
         } else {
             drawConc(tankpointx, tankpointy, document.getElementById("customssize").value, customsangle, document.getElementById("scolo").value, document.getElementById("customssides").value, document.getElementById("customssize").value / document.getElementById("customsdist").value)
-            drawConc(tankpointx, tankpointy, tanksize, customangle, document.getElementById("color").value, document.getElementById("customsides").value, tanksize / document.getElementById("customdistance").value)
+            drawConc(tankpointx, tankpointy, tankSize, customangle, document.getElementById("color").value, document.getElementById("customsides").value, tankSize / document.getElementById("customdistance").value)
         }
     }
 
@@ -611,13 +609,13 @@ function drawTank() {
             if (input.f === true) {
                 barrels.splice(n, 1);
             }
-        } else if ((barrel.type === 4) && ((barrel.xoffset < 0) && (barrel.xoffset > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        } else if ((barrel.type === 4) && ((barrel.xoffset < 0) && (barrel.xoffset > -2 * tankSize))) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
     if (editmode === true) {
-        if (btype === BARREL_AUTO_TURRET && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * parseFloat(validateField(document.getElementById("body").value, 32))))) {
+        if (btype === BARREL_AUTO_TURRET && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * tankSize))) {
             for (var n = 1; n <= mirrorBarrels; n += 1) {
                 drawBarrel((angle(tankpointx, tankpointy, mouse.x, mouse.y) + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
                 //Draw a ghosted barrel while in edit mode above the normal barrels.

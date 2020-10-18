@@ -112,9 +112,8 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
     ctx.restore();
 }
 
-function drawTankRoundBase() {
-    var tanksize = parseFloat(validateField(document.getElementById("body").value, 32));
-    drawBullet(tankpointx, tankpointy, tanksize, tankalpha, "#ffffff");
+function drawTankRoundBase(tankSize) {
+    drawBullet(tankpointx, tankpointy, tankSize, tankalpha, "#ffffff");
 }
 
 function drawBullet(x, y, size, transparency, color) {
