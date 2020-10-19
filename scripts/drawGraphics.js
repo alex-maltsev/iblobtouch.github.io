@@ -112,6 +112,27 @@ function drawBarrel(a, xoffset, yoffset, width, length, alpha, isghost, type, im
     ctx.restore();
 }
 
+// Draw the given Bullet object
+function drawBullet(bullet) {
+    switch (bullet.type) {
+        case BARREL_GUN:
+        case BARREL_AUTO_TURRET:
+            drawCircle(bullet.x, bullet.y, bullet.size, bullet.transparency, bullet.color);
+            break;
+        case BARREL_TRAP_LAYER:
+            drawTrap(bullet.x, bullet.y, bullet.size, bullet.angle, bullet.transparency, bullet.color);
+            break;
+        case BARREL_DRONE_MAKER:
+            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 3);
+            break;
+        case BARREL_NECRO_DRONE_MAKER:
+            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 4);
+            break;
+        default:
+            console.log("Bad bullet type: " + bullet.type);
+    }
+}
+
 // Draws the part of the tank body that goes below the barrels
 function drawTankBase(shape, tankSize, orientationAngle) {
     //Dominator Base
@@ -255,10 +276,10 @@ function drawTankBody(shape, tankSize, orientationAngle) {
 }
 
 function drawTankBodyCircle(tankSize) {
-    drawBullet(tankpointx, tankpointy, tankSize, tankalpha, "#ffffff");
+    drawCircle(tankpointx, tankpointy, tankSize, tankalpha, "#ffffff");
 }
 
-function drawBullet(x, y, size, transparency, color) {
+function drawCircle(x, y, size, transparency, color) {
     var bColor = "";
     if (color === "#ffffff") {
         bColor = document.getElementById("color").value;

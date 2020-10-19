@@ -395,31 +395,9 @@ function moveBullets() {
             bullet.initoffx = offset.totalx;
             bullet.initoffy = offset.totaly;
         }
-        if (bullet.type === 0) {
-            drawBullet(bullet.x, bullet.y, bullet.size, bullet.transparency, bullet.color);
-        }
-        //Display as a bullet if it's a bullet.
 
-        if (bullet.type === 1) {
-            drawTrap(bullet.x, bullet.y, bullet.size, bullet.angle, bullet.transparency, bullet.color);
-        }
-        //Display as a trap if it's a trap.
+        drawBullet(bullet);
 
-        if (bullet.type === 2) {
-            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 3);
-        }
-        //Display as a trap if it's a drone.
-
-        if (bullet.type === 3) {
-            drawPoly(bullet.x, bullet.y, bullet.size, angle(bullet.x, bullet.y, mouse.x, mouse.y), bullet.color, 4);
-        }
-        //Display as a trap if it's a drone.
-
-        if (bullet.type === 4) {
-            drawBullet(bullet.x, bullet.y, bullet.size, bullet.transparency, bullet.color);
-        }
-        //Display as a bullet if it's a bullet.
-        
         if (bullet.time <= 20) {
             bullet.transparency = bullet.time / 20;
         }
