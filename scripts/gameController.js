@@ -333,64 +333,58 @@ function drawTank() {
 }
 
 function moveBullets() {
+    // Mouse cursor repulses drones when the right button is down, and attracts them otherwise
+    let droneInteractionCoeff = mouse.rightdown ? -1.0 : 1.0;
+
     for (var n = 0; n < bullets.length; n += 1) {
         let bullet = bullets[n];
 
-        if (bullet.type > 1) {
+        // Prevent drones from bunching too close together
+        if (isDrone(bullet)) {
             for (var i = 0; i < bullets.length; i += 1) {
-                if ((bullets[i].type > 1) && (i != n) && (bullet.x >= bullets[i].x - bullets[i].size) && (bullet.x <= bullets[i].x + bullets[i].size) && (bullet.y >= bullets[i].y - bullets[i].size) && (bullet.y <= bullets[i].y + bullets[i].size)) {
+                if (i === n || !isDrone(bullets[i])) continue;
+
+                // Increase this value to make the resting drone cloud larger
+                var range = bullets[i].size;
+                if (Math.abs(bullet.x - bullets[i].x) <= range &&
+                    Math.abs(bullet.y - bullets[i].y) <= range) {                        
                     bullet.x += (bullet.x - bullets[i].x) * 0.05;
                     bullet.y += (bullet.y - bullets[i].y) * 0.05;
                 }
             }
         }
 
-        if ((bullet.type === 1) && (bullet.speed > 0)) {
+        //If it's a trap, decrease speed each tick.
+        if (bullet.type === BARREL_TRAP_LAYER && bullet.speed > 0) {
             bullet.speed -= bullet.speed * 0.005;
-            //If it's a trap, decrease speed each tick.
         }
 
-        if (((bullet.type === 2) || (bullet.type === 3)) && (mouse.rightdown === false)) {
+        // Calculate the new position of the bullet:
+        // - Drones are attracted to or repulsed by the mouse cursor
+        // - Other types just move in straight lines based on their initial targeted direction
+        if (isDrone(bullet)) {
             bullet.targetx = mouse.x;
             bullet.targety = mouse.y;
 
-            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totalx - bullet.initoffx);
-
-            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totaly - bullet.initoffy);
-
-            bullet.initoffx = offset.totalx;
-            bullet.initoffy = offset.totaly;
-        } else if (((bullet.type === 2) || (bullet.type === 3)) && (mouse.rightdown === true)) {
-            bullet.targetx = mouse.x;
-            bullet.targety = mouse.y;
-
-            bullet.x -= xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totalx - bullet.initoffx);
-
-            bullet.y -= ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) + (offset.totaly - bullet.initoffy);
+            bullet.x += droneInteractionCoeff * 
+                (xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) 
+                + (offset.totalx - bullet.initoffx));
+            bullet.y += droneInteractionCoeff * 
+                (ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed / 2, 0) 
+                + (offset.totaly - bullet.initoffy));
 
             bullet.initoffx = offset.totalx;
-            bullet.initoffy = offset.totaly;
-        } else if ((bullet.type === 1) || (bullet.type === 4)) {
-
-            bullet.targetx += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
-            bullet.targety += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
-
-            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totalx - bullet.initoffx);
-
-            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totaly - bullet.initoffy);
-
-            bullet.initoffx = offset.totalx;
-            bullet.initoffy = offset.totaly;
-
-            //Get the bullets current x and y based on distance, offset and angle.
+            bullet.initoffy = offset.totaly;           
         } else {
-
             bullet.targetx += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
             bullet.targety += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle);
 
-            bullet.x += xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totalx - bullet.initoffx);
-
-            bullet.y += ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) + (offset.totaly - bullet.initoffy);
+            bullet.x += 
+                xdistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) 
+                + (offset.totalx - bullet.initoffx);
+            bullet.y += 
+                ydistancefrom(bullet.x, bullet.y, bullet.targetx, bullet.targety, bullet.speed, bullet.bangle) 
+                + (offset.totaly - bullet.initoffy);
 
             bullet.initoffx = offset.totalx;
             bullet.initoffy = offset.totaly;
@@ -398,15 +392,18 @@ function moveBullets() {
 
         drawBullet(bullet);
 
-        if (bullet.time <= 20) {
-            bullet.transparency = bullet.time / 20;
-        }
-        if (bullet.time <= 1) {
-            bullets.splice(n, 1);
-            //When a bullet times out, delete it.
-        } else if ((bullet.type < 2) || (bullet.type == 4)) {
-            bullet.time -= 1;
-            //If it's a bullet, decrease it's time left to live by 1 each frame.
+        // Non-drone bullets have set lifetimes.
+        // As they approach time-out they become more transparent.
+        // When they time-out they get deleted.
+        if (!isDrone(bullet)) {
+            if (bullet.time <= 20) {
+                bullet.transparency = bullet.time / 20;
+            }
+
+            bullet.time--;
+            if (bullet.time < 1) {
+                bullets.splice(n, 1);
+            }
         }
     }
 }

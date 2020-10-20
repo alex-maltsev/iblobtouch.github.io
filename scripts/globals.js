@@ -159,6 +159,10 @@ function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
     this.color = color;
 }
 
+function isDrone(bullet) {
+    return bullet.type === BARREL_DRONE_MAKER || bullet.type === BARREL_NECRO_DRONE_MAKER;
+}
+
 //Array containing all the bullets, each entry is a Bullet object.
 var bullets = [];
 
