@@ -198,27 +198,20 @@ function drawTank() {
                 var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
                 var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
 
-                if (barrel.hasOwnProperty("b") === true) {
-                    if ((barrel.type < 4) || (shapes.length === 0)) {
-                        bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
-                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
-                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
-                            mouse.x + ((mouse.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
-                            mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
-                    } else {
-                        bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
-                            xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointx + xdif,
-                            ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointy - ydif,
-                            shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
-                            shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
-                    }
-                } else {
-                    bullets[bullets.length] = new Bullet(barrel, barrel.width / 2, 5, 360,
+                if (barrel.type != BARREL_AUTO_TURRET || shapes.length === 0) {
+                    bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
                         xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
                         ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
                         mouse.x + ((mouse.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
-                        mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, 0, barrel.bulletColor);
+                        mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
+                } else {
+                    bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
+                        xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointx + xdif,
+                        ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointy - ydif,
+                        shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
+                        shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                 }
+
                 barrel.reload = barrel.basereload;
 
                 tankalpha = 1.0;
