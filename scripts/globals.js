@@ -127,16 +127,14 @@ function Barrel(a, type) {
 
     if (document.getElementById("use").checked === false) {
         // Using custom bullet parameters
-        this.b = [
-            parseFloat(validateField(document.getElementById("size").value - 10, 5, false)),
-            parseFloat(validateField(document.getElementById("speed").value, 1, false)) / 10, 
-            parseFloat(validateField(document.getElementById("time").value * 60, 180, false))];
+        this.bulletSize = parseFloat(validateField(document.getElementById("size").value - 10, 5, false));
+        this.bulletSpeed = parseFloat(validateField(document.getElementById("speed").value, 1, false)) / 10; 
+        this.bulletLifetime = parseFloat(validateField(document.getElementById("time").value * 60, 180, false));
     } else {
         // Using default bullet parameters based on barrel dimensions
-        this.b = [
-            parseFloat(validateField(document.getElementById("width").value, 20)) / 2,
-            parseFloat(validateField(document.getElementById("length").value, 60)) / 10, 
-            360];
+        this.bulletSize = parseFloat(validateField(document.getElementById("width").value, 20)) / 2;
+        this.bulletSpeed = parseFloat(validateField(document.getElementById("length").value, 60)) / 10; 
+        this.bulletLifetime = 360;
     }
     this.damage = parseFloat(validateField(document.getElementById("damage").value, 10, false));
     this.comment = "";
@@ -145,19 +143,19 @@ function Barrel(a, type) {
 //Array containing all the barrels, each entry is a Barrel object.
 var barrels = [];
 
-function Bullet(barrel, size, speed, time, x, y, targetx, targety, spr, color) {
+function Bullet(barrel, x, y, targetx, targety, spr, color) {
     this.xoffset = barrel.xoffset;
     this.yoffset = barrel.yoffset;
     this.x = x;
     this.y = y;
     this.bangle = barrel.angle + (Math.random() * spr) - (spr / 2);
-    this.size = size;
+    this.size = barrel.bulletSize;
     this.knockback = barrel.knockback;
     this.damage = barrel.damage;
-    this.speed = speed;
+    this.speed = barrel.bulletSpeed;
     this.health = 100;
     this.distance = barrel.length;
-    this.time = time;
+    this.time = barrel.bulletLifetime;
     this.type = barrel.type;
     this.targetx = targetx;
     this.targety = targety;

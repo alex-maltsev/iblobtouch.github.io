@@ -199,13 +199,13 @@ function drawTank() {
                 var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
 
                 if (barrel.type != BARREL_AUTO_TURRET || shapes.length === 0) {
-                    bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
+                    bullets[bullets.length] = new Bullet(barrel,
                         xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
                         ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
                         mouse.x + ((mouse.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
                         mouse.y + ((mouse.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                 } else {
-                    bullets[bullets.length] = new Bullet(barrel, barrel.b[0], barrel.b[1], barrel.b[2],
+                    bullets[bullets.length] = new Bullet(barrel,
                         xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointx + xdif,
                         ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointy - ydif,
                         shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
