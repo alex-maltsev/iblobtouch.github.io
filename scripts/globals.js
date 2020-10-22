@@ -91,7 +91,7 @@ mouse.y = 0;
 mouse.held = false;
 mouse.rightdown = false;
 
-function Barrel(a, type, size, speed, time) {
+function Barrel(a, type) {
     this.angle = a;
     //Angle is the offset from the angle from mouse to tank.
     this.xoffset = parseFloat(validateField(document.getElementById("offsetx").value, 0, true));
@@ -126,9 +126,17 @@ function Barrel(a, type, size, speed, time) {
     this.bulletColor = document.getElementById("bulletColor").value;
 
     if (document.getElementById("use").checked === false) {
-        this.b = [size, speed, time];
+        // Using custom bullet parameters
+        this.b = [
+            parseFloat(validateField(document.getElementById("size").value - 10, 5, false)),
+            parseFloat(validateField(document.getElementById("speed").value, 1, false)) / 10, 
+            parseFloat(validateField(document.getElementById("time").value * 60, 180, false))];
     } else {
-        this.b = [parseFloat(validateField(document.getElementById("width").value, 20)) / 2, parseFloat(validateField(document.getElementById("length").value, 60)) / 10, 360];
+        // Using default bullet parameters based on barrel dimensions
+        this.b = [
+            parseFloat(validateField(document.getElementById("width").value, 20)) / 2,
+            parseFloat(validateField(document.getElementById("length").value, 60)) / 10, 
+            360];
     }
     this.damage = parseFloat(validateField(document.getElementById("damage").value, 10, false));
     this.comment = "";

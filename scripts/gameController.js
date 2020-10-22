@@ -452,9 +452,10 @@ function placeBarrel() {
         rangle -= rangle % (document.getElementById("increment").value);
     }
 
-    var btype = parseInt(document.getElementById("barrel_type").value);
     for (var n = 1; n <= mirrorBarrels; n += 1) {
-        barrels[barrels.length] = new Barrel((rangle + 360 + ((360 / mirrorBarrels) * n)) % 360, btype, parseFloat(validateField(document.getElementById("size").value - 10, 5, false)), parseFloat(validateField(document.getElementById("speed").value, 1, false)) / 10, parseFloat(validateField(document.getElementById("time").value * 60, 180, false)));
+        barrels[barrels.length] = 
+            new Barrel((rangle + 360 + ((360 / mirrorBarrels) * n)) % 360,
+                        parseInt(document.getElementById("barrel_type").value));
     }
 }
 
