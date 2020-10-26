@@ -249,7 +249,6 @@ function drawTank() {
 
     if ((autospin === true)) {
         autoangle += 0.5;
-        console.log(autoangle + 180);
     }
 
     if (editmode === false) {
@@ -287,15 +286,17 @@ function drawTank() {
     }
 
     var btype = parseInt(document.getElementById("barrel_type").value);
+    var offsetX = parseFloat(validateField(document.getElementById("offsetx").value, 0, true));
 
-    if (editmode === true) {
-        if (btype !== BARREL_AUTO_TURRET || ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) >= 0) || (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < -1 * tankSize))) {
-            for (var n = 1; n <= mirrorBarrels; n += 1) {
-                drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
-                //Draw a ghosted barrel while in edit mode above the normal barrels.
-            }
+    // In edit mode new barrels will usually draw under tank body, *unless* it is in auto turrets
+    // with moderately negative offsetX
+    if (editmode) {
+        if (btype !== BARREL_AUTO_TURRET || offsetX >= 0 || offsetX <= -2 * tankSize) {
+            drawGhostedBarrels(btype, mouseAngle);
         }
-    } else if (autospin === true) {
+    }
+    
+    if (!editmode && autospin) {
         mouse.x = (Math.cos((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointx;
         mouse.y = (Math.sin((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointy;
     }
@@ -315,13 +316,26 @@ function drawTank() {
         }
     }
 
-    if (editmode === true) {
-        if (btype === BARREL_AUTO_TURRET && ((parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) < 0) && (parseFloat(validateField(document.getElementById("offsetx").value, 0, true)) > -2 * tankSize))) {
-            for (var n = 1; n <= mirrorBarrels; n += 1) {
-                drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), parseFloat(validateField(document.getElementById("offset").value, 0, true)), parseFloat(validateField(document.getElementById("width").value, 1)), parseFloat(validateField(document.getElementById("length").value, 1)), 0.5, true, btype, document.getElementById("barrellImage").value, document.getElementById("barrellcolor").value);
-                //Draw a ghosted barrel while in edit mode above the normal barrels.
-            }
+    // In edit mode new auto turrets will draw above the tank body when offsetX is moderately negative
+    if (editmode) {
+        if (btype === BARREL_AUTO_TURRET && offsetX < 0 && offsetX > -2 * tankSize) {
+            drawGhostedBarrels(btype, mouseAngle);
         }
+    }
+}
+
+function drawGhostedBarrels(btype, mouseAngle) {
+    for (var n = 1; n <= mirrorBarrels; n += 1) {
+        drawBarrel((mouseAngle + 360 + ((360 / mirrorBarrels) * n)) % 360, 
+            parseFloat(validateField(document.getElementById("offsetx").value, 0, true)), 
+            parseFloat(validateField(document.getElementById("offset").value, 0, true)), 
+            parseFloat(validateField(document.getElementById("width").value, 1)), 
+            parseFloat(validateField(document.getElementById("length").value, 1)), 
+            0.5, 
+            true, 
+            btype, 
+            document.getElementById("barrellImage").value, 
+            document.getElementById("barrellcolor").value);
     }
 }
 
