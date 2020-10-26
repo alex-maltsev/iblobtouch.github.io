@@ -173,15 +173,8 @@ function drawTank() {
         let barrel = barrels[n];
         if (((mouse.held === true) || (autofire === true) || ((barrel.type === 4) && (shapes.length > 0))) && (editmode === false)) {
             var canfire = true;
-            if (barrel.hasOwnProperty("disabled") === true) {
-                if (barrel.disabled === false) {
-                    canfire = false;
-                }
-            }
-
-            var damage = 10;
-            if (barrel.hasOwnProperty("damage") === true) {
-                damage = barrel.damage;
+            if (barrel.disabled === false) {
+                canfire = false;
             }
 
             //Starts delay timer & disables it being run a second time
@@ -191,10 +184,6 @@ function drawTank() {
             }
 
             if ((barrel.delay === 0) && (barrel.reload === 0) && (canfire === true) && (barrel.type < 2 || barrel.type === 4 || (((barrel.type === 2) && (dronelimit < parseFloat(validateField(document.getElementById("drones").value, 8, false)))) || ((barrel.type === 3) && (necrolimit < parseFloat(validateField(document.getElementById("necrodrones").value, 20, false))))))) {
-                if (barrel.hasOwnProperty("knockback") === false) {
-                    barrel.knockback = 0;
-                }
-
                 var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
                 var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
 
@@ -238,11 +227,9 @@ function drawTank() {
         //Reenables delay timer
     }
 
-    //Delay timer
+    // Decrement barrel delay timers
     for (let barrel in barrels) {
-        if (barrel.hasOwnProperty("delay") === false) {
-            barrel.delay = 0
-        } else if (barrel.delay > 0) {
+        if (barrel.delay > 0) {
             barrel.delay -= 1;
         }
     }
