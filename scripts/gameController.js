@@ -74,6 +74,61 @@ function drawMovement() {
     tankpointy = c.height / 2 - accel.y * 20;
 }
 
+function drawTankEditing() {
+    var tankpointx = c.width / 2 - accel.x * 20;
+    var tankpointy = c.height / 2 - accel.y * 20;
+
+    var tankSize = parseFloat(validateField(document.getElementById("body").value, 32));
+    var shape = document.getElementById("shape").value;
+    var mouseAngle = angle(tankpointx, tankpointy, mouse.x, mouse.y);
+    var orientationAngle = 0;
+
+    drawTankBase(shape, tankSize, orientationAngle);
+
+    var btype = parseInt(document.getElementById("barrel_type").value);
+    var offsetX = parseFloat(validateField(document.getElementById("offsetx").value, 0, true));
+    
+    // Barrels will usually draw under tank body, *unless* it is auto turrets
+    // with moderately negative offsetX
+    for (let barrel of barrels) {
+        if (barrel.type !== BARREL_AUTO_TURRET || barrel.xoffset >= 0 || barrel.xoffset <= -2 * tankSize) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
+        }
+    }
+
+    if (btype !== BARREL_AUTO_TURRET || offsetX >= 0 || offsetX <= -2 * tankSize) {
+        drawGhostedBarrels(btype, mouseAngle);
+    }
+
+    drawTankBody(shape, tankSize, orientationAngle);
+
+    var anglePlace = mouseAngle;
+    if (anglePlace < 0) {
+        anglePlace = 360 + anglePlace;
+    }
+    // Handle removal of existing barrels close to ghosted barrel when user presses F key
+    for (var n = 0; n < barrels.length; n += 1) {
+        let barrel = barrels[n];
+        if (anglePlace >= barrel.angle - 1 && anglePlace <= barrel.angle + 1) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
+            if (input.f === true) {
+                barrels.splice(n, 1);
+            }
+        }
+    }
+
+    // Auto turrets will draw above the tank body when offsetX is moderately negative
+    for (let barrel of barrels) {
+        if (barrel.type === BARREL_AUTO_TURRET && barrel.xoffset < 0 && barrel.xoffset > -2 * tankSize) {
+            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
+        }
+    }
+
+    if (btype === BARREL_AUTO_TURRET && offsetX < 0 && offsetX > -2 * tankSize) {
+        drawGhostedBarrels(btype, mouseAngle);
+    }
+}
+
 function drawTank() {
     var tankpointx = c.width / 2 - accel.x * 20;
     var tankpointy = c.height / 2 - accel.y * 20;
@@ -81,94 +136,90 @@ function drawTank() {
     var tankSize = parseFloat(validateField(document.getElementById("body").value, 32));
     var shape = document.getElementById("shape").value;
     var mouseAngle = angle(tankpointx, tankpointy, mouse.x, mouse.y);
-    var orientationAngle = editmode ? 0 : mouseAngle;
+    var orientationAngle = mouseAngle;
 
     drawTankBase(shape, tankSize, orientationAngle);
 
-    if (editmode === false) {
-        if (document.getElementById("spawn").checked === true) {
-            if (shapetimer > document.getElementById("shaperate").value) {
-                shapetimer = document.getElementById("shaperate").value;
-            } else if (shapetimer > 1) {
-                shapetimer -= 1;
+    if (document.getElementById("spawn").checked === true) {
+        if (shapetimer > document.getElementById("shaperate").value) {
+            shapetimer = document.getElementById("shaperate").value;
+        } else if (shapetimer > 1) {
+            shapetimer -= 1;
+        } else {
+            shapetimer = document.getElementById("shaperate").value;
+            shapetimer = 120;
+            shapes[shapes.length] = createRandomShape();
+        }
+    }
+    for (var n = 0; n < shapes.length; n += 1) {
+        let shape = shapes[n];
+
+        if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < tankSize + shape.size / 2) {
+            if (shape.health > parseFloat(validateField(document.getElementById("bodydamage").value, 50))) {
+                shape.health -= parseFloat(validateField(document.getElementById("bodydamage").value, 50));
+                shape.accelx += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
+                shape.accely += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
+                accel.x += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
+                accel.y += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
             } else {
-                shapetimer = document.getElementById("shaperate").value;
-                shapetimer = 120;
-                shapes[shapes.length] = createRandomShape();
+                shapes.splice(n, 1);
             }
         }
-        for (var n = 0; n < shapes.length; n += 1) {
-            let shape = shapes[n];
 
-            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < tankSize + shape.size / 2) {
-                if (shape.health > parseFloat(validateField(document.getElementById("bodydamage").value, 50))) {
-                    shape.health -= parseFloat(validateField(document.getElementById("bodydamage").value, 50));
-                    shape.accelx += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
-                    shape.accely += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180));
-                    accel.x += Math.cos(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
-                    accel.y += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
-                } else {
-                    shapes.splice(n, 1);
-                }
-            }
+        drawShape(shape);
 
-            drawShape(shape);
+        shape.x -= shape.initx - offset.totalx - shape.accelx;
+        shape.y -= shape.inity - offset.totaly - shape.accely;
 
-            shape.x -= shape.initx - offset.totalx - shape.accelx;
-            shape.y -= shape.inity - offset.totaly - shape.accely;
+        shape.initx = offset.totalx;
+        shape.inity = offset.totaly;
 
-            shape.initx = offset.totalx;
-            shape.inity = offset.totaly;
+        shape.angle += shape.rotatespeed;
 
-            shape.angle += shape.rotatespeed;
+        if ((shape.accelx > 0.1) || (shape.accelx < -0.1)) {
+            shape.accelx -= shape.accelx * 0.1;
+        } else {
+            shape.accelx = 0;
+        }
 
-            if ((shape.accelx > 0.1) || (shape.accelx < -0.1)) {
-                shape.accelx -= shape.accelx * 0.1;
-            } else {
-                shape.accelx = 0;
-            }
+        if ((shape.accely > 0.1) || (shape.accely < -0.1)) {
+            shape.accely -= shape.accely * 0.1;
+        } else {
+            shape.accely = 0;
+        }
 
-            if ((shape.accely > 0.1) || (shape.accely < -0.1)) {
-                shape.accely -= shape.accely * 0.1;
-            } else {
-                shape.accely = 0;
-            }
-
-            for (var i = 0; i < bullets.length; i += 1) {
-                if ((shape.x + shape.size + shape.accelx + (offset.totalx - bullets[i].initoffx) >= bullets[i].x + (offset.totalx - bullets[i].initoffx)) && (shape.x - shape.size + (offset.totalx - bullets[i].initoffx) <= bullets[i].x + bullets[i].size + (offset.totalx - bullets[i].initoffx) + shape.accelx)) {
-                    if ((shape.y + shape.size + shape.accely + (offset.totaly - bullets[i].initoffy) >= bullets[i].y + (offset.totaly - bullets[i].initoffy)) && (shape.y - shape.size + (offset.totaly - bullets[i].initoffy) <= bullets[i].y + bullets[i].size + (offset.totaly - bullets[i].initoffy) + shape.accely)) {
-                        console.log("Collision!");
-                        if (shape.health > bullets[i].damage) {
-                            shape.health -= bullets[i].damage;
-                            shape.accelx += Math.cos(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
-                            shape.accely += Math.sin(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
-                        } else {
-                            if ((bullets[i].type === 3) && (necrolimit < 20)) {
-                                bullets[bullets.length] = bullets[i];
-                                bullets[bullets.length - 1].x = shape.x;
-                                bullets[bullets.length - 1].y = shape.y;
-                            }
-                            shapes.splice(n, 1);
+        for (var i = 0; i < bullets.length; i += 1) {
+            if ((shape.x + shape.size + shape.accelx + (offset.totalx - bullets[i].initoffx) >= bullets[i].x + (offset.totalx - bullets[i].initoffx)) && (shape.x - shape.size + (offset.totalx - bullets[i].initoffx) <= bullets[i].x + bullets[i].size + (offset.totalx - bullets[i].initoffx) + shape.accelx)) {
+                if ((shape.y + shape.size + shape.accely + (offset.totaly - bullets[i].initoffy) >= bullets[i].y + (offset.totaly - bullets[i].initoffy)) && (shape.y - shape.size + (offset.totaly - bullets[i].initoffy) <= bullets[i].y + bullets[i].size + (offset.totaly - bullets[i].initoffy) + shape.accely)) {
+                    console.log("Collision!");
+                    if (shape.health > bullets[i].damage) {
+                        shape.health -= bullets[i].damage;
+                        shape.accelx += Math.cos(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
+                        shape.accely += Math.sin(angle(bullets[i].x, bullets[i].y, shape.x, shape.y) * (Math.PI / 180)) * (bullets[i].size / 10);
+                    } else {
+                        if ((bullets[i].type === 3) && (necrolimit < 20)) {
+                            bullets[bullets.length] = bullets[i];
+                            bullets[bullets.length - 1].x = shape.x;
+                            bullets[bullets.length - 1].y = shape.y;
                         }
-                        if (bullets[i].type === 2) {
-                            dronelimit -= 1;
-                        }
-                        if (bullets[i].type === 3) {
-                            necrolimit -= 1;
-                        }
-                        bullets.splice(i, 1);
+                        shapes.splice(n, 1);
                     }
+                    if (bullets[i].type === 2) {
+                        dronelimit -= 1;
+                    }
+                    if (bullets[i].type === 3) {
+                        necrolimit -= 1;
+                    }
+                    bullets.splice(i, 1);
                 }
             }
         }
     }
 
-    if (editmode === false) {
-        findNearestShape();
-    }
+    findNearestShape();
 
     for (let barrel of barrels) {
-        if (((mouse.held === true) || (autofire === true) || ((barrel.type === 4) && (shapes.length > 0))) && (editmode === false)) {
+        if (((mouse.held === true) || (autofire === true) || ((barrel.type === 4) && (shapes.length > 0)))) {
             var canfire = true;
             if (barrel.disabled === false) {
                 canfire = false;
@@ -220,7 +271,6 @@ function drawTank() {
                 barrel.delayed = true;
             }
         }
-
         //Reenables delay timer
     }
 
@@ -231,17 +281,10 @@ function drawTank() {
         }
     }
 
-    if ((autospin === true)) {
-        autoangle += 0.5;
-    }
+    moveBullets();
 
-    if (editmode === false) {
-        moveBullets();
-    }
-
-    //Loop through each barrel.
-    for (var n = 0; n < barrels.length; n += 1) {
-        let barrel = barrels[n];
+    // Draw barrels below the tank body, including the firing animation
+    for (let barrel of barrels) {
         if (barrel.reload > (barrel.basereload / 8) * 7) {
             barrel.length -= (barrel.length / barrel.basereload);
             //If reload is > 3/4ths of its max value, reduce the length of the barrel.
@@ -255,32 +298,14 @@ function drawTank() {
         if (barrel.reload > 0) {
             barrel.reload -= 1;
         }
-        var anglePlace = mouseAngle;
-        if (anglePlace < 0) {
-            anglePlace = 360 + anglePlace;
-        }
-        if ((anglePlace >= barrel.angle - 1) && (anglePlace <= barrel.angle + 1) && (editmode === true)) {
-            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
-            if (input.f === true) {
-                barrels.splice(n, 1);
-            }
-        } else if ((barrel.type < 4) || ((barrel.xoffset >= 0) || barrel.xoffset < -1 * tankSize)) {
+
+        if (barrel.type !== BARREL_AUTO_TURRET || barrel.xoffset >= 0 || barrel.xoffset <= -2 * tankSize) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
-    var btype = parseInt(document.getElementById("barrel_type").value);
-    var offsetX = parseFloat(validateField(document.getElementById("offsetx").value, 0, true));
-
-    // In edit mode new barrels will usually draw under tank body, *unless* it is in auto turrets
-    // with moderately negative offsetX
-    if (editmode) {
-        if (btype !== BARREL_AUTO_TURRET || offsetX >= 0 || offsetX <= -2 * tankSize) {
-            drawGhostedBarrels(btype, mouseAngle);
-        }
-    }
-    
-    if (!editmode && autospin) {
+    if (autospin) {
+        autoangle += 0.5;
         mouse.x = (Math.cos((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointx;
         mouse.y = (Math.sin((autoangle + 180) * (Math.PI / 180)) * 200) + tankpointy;
     }
@@ -288,22 +313,9 @@ function drawTank() {
     drawTankBody(shape, tankSize, orientationAngle);
 
     //Loop through each barrel.
-    for (var n = 0; n < barrels.length; n += 1) {
-        let barrel = barrels[n];
-        if (editmode === true && (mouseAngle >= barrel.angle - 1) && (mouseAngle <= barrel.angle + 1)) {
-            drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, 0.5, false, barrel.type, barrel.image, barrel.color);
-            if (input.f === true) {
-                barrels.splice(n, 1);
-            }
-        } else if ((barrel.type === 4) && ((barrel.xoffset < 0) && (barrel.xoffset > -2 * tankSize))) {
+    for (let barrel of barrels) {
+        if (barrel.type === BARREL_AUTO_TURRET && barrel.xoffset < 0 && barrel.xoffset > -2 * tankSize) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
-        }
-    }
-
-    // In edit mode new auto turrets will draw above the tank body when offsetX is moderately negative
-    if (editmode) {
-        if (btype === BARREL_AUTO_TURRET && offsetX < 0 && offsetX > -2 * tankSize) {
-            drawGhostedBarrels(btype, mouseAngle);
         }
     }
 }
@@ -452,7 +464,11 @@ function drawUI() {
 function drawManager() {
     drawMovement();
 
-    drawTank();
+    if (editmode) {
+        drawTankEditing();
+    } else {
+         drawTank();    
+    }
 
     drawUI();
 }
