@@ -167,8 +167,7 @@ function drawTank() {
         findNearestShape();
     }
 
-    for (var n = 0; n < barrels.length; n += 1) {
-        let barrel = barrels[n];
+    for (let barrel of barrels) {
         if (((mouse.held === true) || (autofire === true) || ((barrel.type === 4) && (shapes.length > 0))) && (editmode === false)) {
             var canfire = true;
             if (barrel.disabled === false) {

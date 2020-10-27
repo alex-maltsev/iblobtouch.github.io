@@ -435,7 +435,7 @@ function importObject() {
         document.getElementById("body").value = inputtext
     }
 
-    for (let barrel in barrels) {
+    for (let barrel of barrels) {
         if (barrel.image === undefined) {
             barrel.image = "rectangle";
             barrel.color = "#888888";
