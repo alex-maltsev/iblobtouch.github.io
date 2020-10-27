@@ -20,7 +20,7 @@ var tankalpha = 1;
 var shapetimer = 120;
 var undos = [];
 var mirrorBarrels = 1;
-var nShape = 0;
+var nearestShape = null;
 var newGraph = true;
 
 var tankpointx = c.width / 2;

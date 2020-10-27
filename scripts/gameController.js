@@ -109,12 +109,7 @@ function drawTank() {
                     accel.y += Math.sin(angle(tankpointx, tankpointy, shape.x, shape.y) * (Math.PI / 180)) / 5;
                 } else {
                     shapes.splice(n, 1);
-                    nShape = 0;
                 }
-            }
-
-            if (Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2)) < (Math.sqrt(Math.pow(shapes[nShape].x - tankpointx, 2) + Math.pow(shapes[nShape].y - tankpointy, 2)))) {
-                nShape = n;
             }
 
             drawShape(shape);
@@ -154,7 +149,6 @@ function drawTank() {
                                 bullets[bullets.length - 1].y = shape.y;
                             }
                             shapes.splice(n, 1);
-                            nShape = 0;
                         }
                         if (bullets[i].type === 2) {
                             dronelimit -= 1;
@@ -167,6 +161,10 @@ function drawTank() {
                 }
             }
         }
+    }
+
+    if (editmode === false) {
+        findNearestShape();
     }
 
     for (var n = 0; n < barrels.length; n += 1) {
@@ -187,7 +185,7 @@ function drawTank() {
                 var ydif = xdistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
                 var xdif = ydistancefrom(c.width / 2, c.height / 2, mouse.x + ((mouse.x - tankpointx) * barrel.length) - accel.x, mouse.y + ((mouse.y - tankpointy) * barrel.length) - accel.y, barrel.yoffset, barrel.angle);
 
-                if (barrel.type != BARREL_AUTO_TURRET || shapes.length === 0) {
+                if (barrel.type != BARREL_AUTO_TURRET || nearestShape === null) {
                     bullets[bullets.length] = new Bullet(barrel,
                         xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointx + xdif,
                         ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, barrel.length + barrel.xoffset, barrel.angle) + tankpointy - ydif,
@@ -197,8 +195,8 @@ function drawTank() {
                     bullets[bullets.length] = new Bullet(barrel,
                         xdistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointx + xdif,
                         ydistancefrom(tankpointx, tankpointy, mouse.x, mouse.y, tankSize, barrel.angle) + tankpointy - ydif,
-                        shapes[nShape].x + ((shapes[nShape].x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
-                        shapes[nShape].y + ((shapes[nShape].y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
+                        nearestShape.x + ((nearestShape.x - tankpointx) * barrel.length + barrel.xoffset) - accel.x,
+                        nearestShape.y + ((nearestShape.y - tankpointy) * barrel.length + barrel.xoffset) - accel.y, barrel.spread, barrel.bulletColor);
                 }
 
                 barrel.reload = barrel.basereload;
@@ -228,7 +226,7 @@ function drawTank() {
     }
 
     // Decrement barrel delay timers
-    for (let barrel in barrels) {
+    for (let barrel of barrels) {
         if (barrel.delay > 0) {
             barrel.delay -= 1;
         }
@@ -323,6 +321,21 @@ function drawGhostedBarrels(btype, mouseAngle) {
             btype, 
             document.getElementById("barrellImage").value, 
             document.getElementById("barrellcolor").value);
+    }
+}
+
+// Find the shape closes to the tank.
+// If there are no shapes then nearestShape will become null.
+function findNearestShape() {
+    nearestShape = null;
+    var minDistance = 1e9;
+
+    for (let shape of shapes) {
+        var distance = Math.sqrt(Math.pow(shape.x - tankpointx, 2) + Math.pow(shape.y - tankpointy, 2));
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestShape = shape;
+        }
     }
 }
 
