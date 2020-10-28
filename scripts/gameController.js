@@ -91,12 +91,12 @@ function drawTankEditing() {
     // Barrels will usually draw under tank body, *unless* it is auto turrets
     // with moderately negative offsetX
     for (let barrel of barrels) {
-        if (barrel.type !== BARREL_AUTO_TURRET || barrel.xoffset >= 0 || barrel.xoffset <= -2 * tankSize) {
+        if (shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
-    if (btype !== BARREL_AUTO_TURRET || offsetX >= 0 || offsetX <= -2 * tankSize) {
+    if (shouldDrawBarrelBelowTankBody(btype, offsetX, tankSize)) {
         drawGhostedBarrels(btype, mouseAngle);
     }
 
@@ -119,12 +119,12 @@ function drawTankEditing() {
 
     // Auto turrets will draw above the tank body when offsetX is moderately negative
     for (let barrel of barrels) {
-        if (barrel.type === BARREL_AUTO_TURRET && barrel.xoffset < 0 && barrel.xoffset > -2 * tankSize) {
+        if (!shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
 
-    if (btype === BARREL_AUTO_TURRET && offsetX < 0 && offsetX > -2 * tankSize) {
+    if (!shouldDrawBarrelBelowTankBody(btype, offsetX, tankSize)) {
         drawGhostedBarrels(btype, mouseAngle);
     }
 }
@@ -299,7 +299,7 @@ function drawTank() {
             barrel.reload -= 1;
         }
 
-        if (barrel.type !== BARREL_AUTO_TURRET || barrel.xoffset >= 0 || barrel.xoffset <= -2 * tankSize) {
+        if (shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
@@ -314,10 +314,14 @@ function drawTank() {
 
     //Loop through each barrel.
     for (let barrel of barrels) {
-        if (barrel.type === BARREL_AUTO_TURRET && barrel.xoffset < 0 && barrel.xoffset > -2 * tankSize) {
+        if (!shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
         }
     }
+}
+
+function shouldDrawBarrelBelowTankBody(barrelType, barrelXOffset, tankSize) {
+    return barrelType !== BARREL_AUTO_TURRET || barrelXOffset >= 0 || barrelXOffset <= -2 * tankSize;
 }
 
 function drawGhostedBarrels(btype, mouseAngle) {
