@@ -88,8 +88,6 @@ function drawTankEditing() {
     var btype = parseInt(document.getElementById("barrel_type").value);
     var offsetX = parseFloat(validateField(document.getElementById("offsetx").value, 0, true));
     
-    // Barrels will usually draw under tank body, *unless* it is auto turrets
-    // with moderately negative offsetX
     for (let barrel of barrels) {
         if (shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
@@ -117,7 +115,6 @@ function drawTankEditing() {
         }
     }
 
-    // Auto turrets will draw above the tank body when offsetX is moderately negative
     for (let barrel of barrels) {
         if (!shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
@@ -312,7 +309,6 @@ function drawTank() {
 
     drawTankBody(shape, tankSize, orientationAngle);
 
-    //Loop through each barrel.
     for (let barrel of barrels) {
         if (!shouldDrawBarrelBelowTankBody(barrel.type, barrel.xoffset, tankSize)) {
             drawBarrel(barrel.angle, barrel.xoffset, barrel.yoffset, barrel.width, barrel.length, tankalpha, false, barrel.type, barrel.image, barrel.color);
@@ -321,6 +317,8 @@ function drawTank() {
 }
 
 function shouldDrawBarrelBelowTankBody(barrelType, barrelXOffset, tankSize) {
+    // Barrels will usually draw under tank body, *unless* it is auto turrets
+    // with moderately negative offsetX
     return barrelType !== BARREL_AUTO_TURRET || barrelXOffset >= 0 || barrelXOffset <= -2 * tankSize;
 }
 
